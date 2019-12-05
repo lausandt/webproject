@@ -1,2 +1,2 @@
 # Web
-Web applications 
+Web applications for a uni project 
