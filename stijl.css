@@ -14,106 +14,182 @@ time, mark, audio, video {
     margin:0;
     padding:0;
     border:0;
-    font-size:1em;
     vertical-align:baseline;
     background:transparent;
 }
-/*** generiek ***/
-html, body {
-    height:99%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size:1em;
-}
-h1 {
-    font-size: 2em;
-}
-.pagetitle {
-    display: block;
-    border: thin solid Ivory;
-    margin:0.5em 1em 0.5em 1em;
-    border-radius: 0.5em;
-}
-.rounded {
-    border: thin solid Ivory; 
-    border-radius: 0.5em;
-    margin: 0.25em
-}
-/*** Hoofdstructuur ***/
-.container {
-    font-size: 1.5em;
-    height: 100%;
+
+/*** Generiek ***/
+body {
     width: 100%;
-    background: Ivory;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 12% 5% 83%;
-    grid-gap: 0.25em;
-    grid-template-areas:
-      "header header"
-      "active score"
-      "menu play-area"
-}
-.header {
-    background: LightSkyBlue;
-    grid-area: header;
-    text-align: center;
-    border-radius: 0.5em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;   
-    margin-top: 0.25em;    
+    min-height: 100%;
+    padding: 1em 0;
+    margin: 0;
+    background-color: #F8F8F8;
 }
 
-.menu {
-    background: AquaMarine;
-    grid-area: menu;
-    border-radius: 0.5em; 
-    margin-bottom: 0.25em;
-    margin-left: 0.5em;
+::selection {
+    color: white;
+    background: #FF7E02;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
     text-align: center;
 }
 
-.play-area {
-    background: PaleTurquoise;
-    grid-area: play-area;
-    border-radius: 0.5em;
-    margin-bottom: 0.25em;
-    margin-right: 0.5em;
-}
-.active-game {
-    background: SeaGreen;
-    grid-area: active;
-    border-radius: 0.5em;
-    margin-left: 0.5em;
+.knop {
+    margin: 0px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    background-color: #2b77f2;
     text-align: center;
-}
-.score {
-    background: YellowGreen;
-    grid-area: score;
-    border-radius: 0.5em;
-    margin-right: 0.5em;
-    text-align: center;
-}
-/*** Navigatie ***/
-.navul {
-    list-style-type: none;
-    margin-right: 1em;
+    color: #EFEFEF;
     font-size: 1em;
+    border: 1px solid darkgray;
+    border-radius: 2px;
+    box-shadow: 0px 0px 5px #ABABAB;
 }
-    /*** Navigatie buttons ***/
-/*** Als er ander element wordt toegevoegd buiten de navul klasse moet deze opmaak gespecificeerd worden als bv .navul.li ***/
-    li {
-       border: thin solid Ivory; 
-       border-radius: 0.5em;
-       margin: 1em;
+
+.knop:hover, .container .menu ul a.active {
+    background-color: #FF7E02;
+    cursor: pointer;
+    color: white;
+}
+
+.knop:visited {
+    color: #DADADA;
+}
+
+/*** Navigatie ***/
+.container .menu {
+    background-color: #EFEFEF;
+    box-shadow: 0px 0px 5px #ABABAB;
+    width: 20%;
+    float: left;
+}
+
+.container .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container .menu ul li a {
+    width: 90%;
+    padding: .25em 0;
+    margin: .75em auto;
+}
+
+.container .menu, .container .content {
+    padding: 1em 0;
+    margin: 1.5em 0;
+}
+
+.menu-popup {
+    display: none;
+}
+
+/*** Hoofdcontent ***/
+.container {
+    width: 90%;
+    padding: 0 2.5%;
+    margin: 0px auto;
+}
+
+.container .header {
+    width: 100%;
+    padding: .25em 0;
+    background-color: #2b77f2;
+    color: white;
+    box-shadow: 0px 0px 5px #ABABAB;
+}
+
+.container .content {
+    width: 80%;
+    float: left;
+}
+
+.container .content h2 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container .content p {
+    width: 80%;
+    margin: 1em auto;
+}
+
+.container .content .spel-controls {
+    width: 20%;
+    margin: 1em auto;
+    height: 2em;
+}
+
+.container .content .spel-controls .knop {
+    display: block;
+    width: 45%;
+    margin-left: 2.5%;
+    float: left;
+}
+
+.container .content .spel {
+    width: 100%;
+    display: block;
+}
+
+.container .content .spel canvas {
+    display: block;
+    border: 1px solid black;
+    margin: 1em auto;
+}
+
+@media (max-width:1280px)  {
+    /*** Nvaigatie ***/
+    .container .menu {
+        width: 35%;
     }
-    a {
-      text-decoration: none;
-      color: initial;
+    /*** Hoofdstructuur ***/
+    .container .content {
+        width: 65%;
     }
-    a:visited {
-        color: initial;
+    .container .content .spel-controls {
+        width: 35%;
+    }
+}
+
+@media (max-width:640px)  {
+    /*** Generiek ***/
+    .container .menu, .container .content, .container .content .spel canvas {
+        width: 100%;
     }
 
-    li:hover {
-        background: Coral;
+    /*** Nvaigatie ***/
+    .container .menu {
+        display: none;
     }
+    
+    .menu-popup {
+        display: block;
+        width: 100%;
+        margin: .5em auto 0 auto;
+    }
+
+    #show-menu {
+        float: right;
+    }
+
+    #show-menu.clicked {
+        background-color: red;
+    }
+
+    /*** Hoofdstructuur ***/
+    .container .content .spel-controls {
+        width: 50%;
+    }
+    .container .menu, .container .content {
+        padding: 1em 0;
+        margin: .5em 0;
+    }
+}
