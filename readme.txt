@@ -1,0 +1,3 @@
+Er is gekozen voor het gebruiken van de normale positionering (relative) in combinatie met het gebruik van floats.
+Het gebruik van floats is gekozen omdat dit een hele makkelijke manier is van het automatisch verticaal laten verplaatsen van items als er horizontaal geen ruimte meer is.
+Hierdoor kan er op een relatief eenvoudige wijze ook ondersteuning worden geboden voor kleinere devices als tablets of telefoons.
