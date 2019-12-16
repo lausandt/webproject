@@ -1,0 +1,119 @@
+/*** Reset ***/
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    font-size:1em;
+    vertical-align:baseline;
+    background:transparent;
+}
+/*** generiek ***/
+html, body {
+    height:99%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:1em;
+}
+h1 {
+    font-size: 2em;
+}
+.pagetitle {
+    display: block;
+    border: thin solid Ivory;
+    margin:0.5em 1em 0.5em 1em;
+    border-radius: 0.5em;
+}
+.rounded {
+    border: thin solid Ivory; 
+    border-radius: 0.5em;
+    margin: 0.25em
+}
+/*** Hoofdstructuur ***/
+.container {
+    font-size: 1.5em;
+    height: 100%;
+    width: 100%;
+    background: Ivory;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 12% 5% 83%;
+    grid-gap: 0.25em;
+    grid-template-areas:
+      "header header"
+      "active score"
+      "menu play-area"
+}
+.header {
+    background: LightSkyBlue;
+    grid-area: header;
+    text-align: center;
+    border-radius: 0.5em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;   
+    margin-top: 0.25em;    
+}
+
+.menu {
+    background: AquaMarine;
+    grid-area: menu;
+    border-radius: 0.5em; 
+    margin-bottom: 0.25em;
+    margin-left: 0.5em;
+    text-align: center;
+}
+
+.play-area {
+    background: PaleTurquoise;
+    grid-area: play-area;
+    border-radius: 0.5em;
+    margin-bottom: 0.25em;
+    margin-right: 0.5em;
+}
+.active-game {
+    background: SeaGreen;
+    grid-area: active;
+    border-radius: 0.5em;
+    margin-left: 0.5em;
+    text-align: center;
+}
+.score {
+    background: YellowGreen;
+    grid-area: score;
+    border-radius: 0.5em;
+    margin-right: 0.5em;
+    text-align: center;
+}
+/*** Navigatie ***/
+.navul {
+    list-style-type: none;
+    margin-right: 1em;
+    font-size: 1em;
+}
+    /*** Navigatie buttons ***/
+/*** Als er ander element wordt toegevoegd buiten de navul klasse moet deze opmaak gespecificeerd worden als bv .navul.li ***/
+    li {
+       border: thin solid Ivory; 
+       border-radius: 0.5em;
+       margin: 1em;
+    }
+    a {
+      text-decoration: none;
+      color: initial;
+    }
+    a:visited {
+        color: initial;
+    }
+
+    li:hover {
+        background: Coral;
+    }
