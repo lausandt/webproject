@@ -1,6 +1,6 @@
 "use strict";
 
-const 
+const
     R = 10,                     // straal van een element
     STEP = 2 * R,               // stapgrootte
     WIDTH = 360,                // breedte veld
@@ -29,48 +29,7 @@ var snake,
 $(document).ready(function () {
     $("#startSnake").click(init);
     $("#stopSnake").click(stop);
-    $("#show-menu").click(function () {
-      toggleMenu();
-    });
-    $(window).resize(function () {
-      toggleMenuOnResize();
-    });
 });
-
-/*************************************************************************************************
- **                                            UI                                               **
- *************************************************************************************************/
-/**
-* @function toggleMenu() -> void
-* @desc Laat menu tonen of weghalen aan de hand van de huidige status van het menu.
-*/
-function toggleMenu() {
-    var isClicked = $("#show-menu").hasClass("clicked");
-    if (!isClicked) {
-      $(".menu").css("display", "block");
-    } else {
-      $(".menu").css("display", "none");
-    }
-    $("#show-menu").toggleClass("clicked");
-}
-
-/**
-* @function toggleMenuOnResize() -> void
-* @desc Laat menu tonen aan de hand van resize; in het geval van een kleiner scherm én niet eerder
-*       op de "toon-menu-knop" gedrukt, dan wordt het menu niet getoond.
-*/
-function toggleMenuOnResize() {
-    if (window.innerWidth >= 641) {
-        $(".menu").css("display", "block");
-    }
-    if (window.innerWidth <= 640) {
-        var isClicked = $("#show-menu").hasClass("clicked");
-        if (!isClicked) {
-            $(".menu").css("display", "none");
-        }
-    }
-}
-
 
 /*************************************************************************************************
  **                                    Nieuwe code                                              **
@@ -256,7 +215,7 @@ function getRandomInt(min, max) {
   @desc [Element] array van random verdeelde voedselpartikelen
   @return [Element] array met food
 */
-function createFoods() {   
+function createFoods() {
     var i, food;
     i = 0;
     //we gebruiken een while omdat we, om een arraymethode te gebruiken, eerst een nieuw array zouden moeten creëren (met NUMFOODS elementen)
