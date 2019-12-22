@@ -196,6 +196,34 @@ Element.prototype.collidesWithOneOfA = function (elements) {
     return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
 } 
 
+/** 
+ * @function canMove(direction) -> boolean
+ * @desc methode van snake geeft aan of deze (head) in de aangegeven richting kan bewegen
+ * 
+ * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
+ * @return boolean true if the head of snake can move otherwise false 
+ */
+Snake.prototype.canMove = function(direction) {
+    var head = snake.segments[snake.segments.length-1];
+    switch(direction) {
+        case UP:
+            return head.y <= YMAX;
+            break;
+        case DOWN:
+            return head.y >= YMIN;
+            break;
+        case LEFT:
+            return head.x >= XMIN;
+            break;
+        case RIGHT:
+            return head.x <= XMAX;
+            break;
+        default:
+            return false;  
+    }            
+}
+ 
+ 
 /***************************************************************************
  **                 Hulpfuncties                                          **
  ***************************************************************************/
