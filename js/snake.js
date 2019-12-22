@@ -169,7 +169,7 @@ function Element(radius, x, y, color) {
 /**
   @function collidesWithOneOf() -> boolean
   @desc Retourneert true als één van de elementen dezelfde x- en y-coordinaat heeft als dit element.
-  @param {[Element] elements een array van elementen waarvan de x- en y-coordinaat
+  @param {[Element]} elements een array van elementen waarvan de x- en y-coordinaat
         worden vergeleken met dit element
 */
 Element.prototype.collidesWithOneOf = function (elements) {
@@ -186,6 +186,16 @@ Element.prototype.collidesWithOneOf = function (elements) {
     });
     return false;
 };
+/**
+  @function collidesWithOneOf() -> boolean
+  @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie aangeroepen wordt.
+  @param {[Element]} elements een array van elementen
+  @return boolean false if there are no collisions otherwise true
+*/
+Element.prototype.collidesWithOneOfA = function (elements) { 
+    return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
+} 
+
 /***************************************************************************
  **                 Hulpfuncties                                          **
  ***************************************************************************/
