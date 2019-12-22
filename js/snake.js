@@ -168,23 +168,13 @@ function Element(radius, x, y, color) {
 
 /**
   @function collidesWithOneOf() -> boolean
-  @desc Retourneert true als één van de elementen dezelfde x- en y-coordinaat heeft als dit element.
-  @param {[Element]} elements een array van elementen waarvan de x- en y-coordinaat
-        worden vergeleken met dit element
-*/
-Element.prototype.collidesWithOneOf = function (elements) {
-    return elements.filter(element => this.x === element.x && this.y === element.y).length > 0;
-};
-
-/**
-  @function collidesWithOneOf() -> boolean
   @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie aangeroepen wordt.
   @param {[Element]} elements een array van elementen
   @return boolean false if there are no collisions otherwise true
 */
-Element.prototype.collidesWithOneOfA = function (elements) { 
+Element.prototype.collidesWithOneOf = function (elements) {
     return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
-} 
+};
 
 /** 
  * @function canMove(direction) -> boolean
@@ -195,25 +185,10 @@ Element.prototype.collidesWithOneOfA = function (elements) {
  */
 Snake.prototype.canMove = function(direction) {
     var head = snake.segments[snake.segments.length-1];
-    switch(direction) {
-        case UP:
-            return head.y <= YMAX;
-            break;
-        case DOWN:
-            return head.y >= YMIN;
-            break;
-        case LEFT:
-            return head.x >= XMIN;
-            break;
-        case RIGHT:
-            return head.x <= XMAX;
-            break;
-        default:
-            return false;  
-    }            
+    return (head.y >= XMIN && head.y <= YMAX && head.x >= XMIN && head.x <= XMAX);
 }
- 
- 
+
+
 /***************************************************************************
  **                 Hulpfuncties                                          **
  ***************************************************************************/
