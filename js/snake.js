@@ -173,19 +173,9 @@ function Element(radius, x, y, color) {
         worden vergeleken met dit element
 */
 Element.prototype.collidesWithOneOf = function (elements) {
-    if (elements === undefined) {
-        return false;
-    }
-
-    var x = this.x;
-    var y = this.y;
-    elements.forEach(function (element) {
-        if (x === element.x && y === element.y) {
-            return true;
-        }
-    });
-    return false;
+    return elements.filter(element => this.x === element.x && this.y === element.y).length > 0;
 };
+
 /**
   @function collidesWithOneOf() -> boolean
   @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie aangeroepen wordt.
