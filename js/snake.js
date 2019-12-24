@@ -183,16 +183,12 @@ Snake.prototype.canMove = function(direction) {
     switch(direction) {
         case UP:
           return (this.head().y >= YMIN + STEP); 
-          break;
         case DOWN:
           return this.head().y <= YMAX - STEP;
-          break;
         case LEFT:
           return this.head().x >= XMIN + STEP;
-          break;
         case RIGHT:
           return this.head().x <= XMAX - STEP;
-          break;
         default:
             return false;        
     };
