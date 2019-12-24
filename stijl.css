@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
-.knop {
+a, button {
     margin: 0px;
     text-decoration: none;
     color: white;
@@ -51,13 +51,13 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0px 0px 5px #ABABAB;
 }
 
-.knop:hover, .container .menu ul a.active {
+a:hover, a.active, button:hover {
     background-color: #FF7E02;
     cursor: pointer;
     color: white;
 }
 
-.knop:visited {
+a:visited {
     color: #DADADA;
 }
 
@@ -127,7 +127,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 2em;
 }
 
-.container .content .spel-controls .knop {
+.container .content .spel-controls button {
     display: block;
     width: 45%;
     margin-left: 2.5%;
