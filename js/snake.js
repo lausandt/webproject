@@ -1,6 +1,6 @@
 "use strict";
 
-const
+const 
     R = 10,                     // straal van een element
     STEP = 2 * R,               // stapgrootte
     WIDTH = 360,                // breedte veld
@@ -29,7 +29,48 @@ var snake,
 $(document).ready(function () {
     $("#startSnake").click(init);
     $("#stopSnake").click(stop);
+    $("#show-menu").click(function () {
+      toggleMenu();
+    });
+    $(window).resize(function () {
+      toggleMenuOnResize();
+    });
 });
+
+/*************************************************************************************************
+ **                                            UI                                               **
+ *************************************************************************************************/
+/**
+* @function toggleMenu() -> void
+* @desc Laat menu tonen of weghalen aan de hand van de huidige status van het menu.
+*/
+function toggleMenu() {
+    var isClicked = $("#show-menu").hasClass("clicked");
+    if (!isClicked) {
+      $(".menu").css("display", "block");
+    } else {
+      $(".menu").css("display", "none");
+    }
+    $("#show-menu").toggleClass("clicked");
+}
+
+/**
+* @function toggleMenuOnResize() -> void
+* @desc Laat menu tonen aan de hand van resize; in het geval van een kleiner scherm én niet eerder
+*       op de "toon-menu-knop" gedrukt, dan wordt het menu niet getoond.
+*/
+function toggleMenuOnResize() {
+    if (window.innerWidth >= 641) {
+        $(".menu").css("display", "block");
+    }
+    if (window.innerWidth <= 640) {
+        var isClicked = $("#show-menu").hasClass("clicked");
+        if (!isClicked) {
+            $(".menu").css("display", "none");
+        }
+    }
+}
+
 
 /*************************************************************************************************
  **                                    Nieuwe code                                              **
@@ -48,17 +89,13 @@ $(document).ready(function () {
  **                 Commando's voor de gebruiker                          **
  ***************************************************************************/
 /**
-  @function init() -> void
-  @desc Haal eventueel bestaand voedsel en een bestaande slang weg, creëer een slang, genereer voedsel, en teken alles
+ * @function init() -> void
+ * @desc Haal eventueel bestaand voedsel en een bestaande slang weg, creëer een slang, genereer voedsel, en teken alles
 */
 function init() {
-    // Verwijder bestaand voedsel en huidige slang
     stop();
-    // Creëer nieuwe slang
     createStartSnake();
-    // Voeg nieuw voedsel toe
     createFoods();
-    // Teken alles op het scherm
     draw();
 }
 
@@ -67,7 +104,6 @@ function init() {
   @desc Laat slang en voedsel verdwijnen, en teken leeg veld
 */
 function stop() {
-    var canvas = $("#mySnakeCanvas");
     snake = null;
     foods = [];
     $("#mySnakeCanvas").clearCanvas();
@@ -93,9 +129,7 @@ function move(direction) {
 */
 function draw() {
     var canvas = $("#mySnakeCanvas").clearCanvas();
-    // Teken slang
     snake.segments.forEach(seg => drawElement(seg, canvas));
-    // Teken voedsel
     foods.forEach(bite => drawElement(bite, canvas));
 }
 /***************************************************************************
@@ -108,8 +142,9 @@ function draw() {
 */
 function Snake(segments) {
     this.segments = segments;
-    segments[segments.length-1].color=HEAD; // allows to create a new snake when updating after a move or eating
+    segments[segments.length-1].color=HEAD;
 }
+ 
 
 /**
    @constructor Element
@@ -126,7 +161,7 @@ function Element(radius, x, y, color) {
 }
 
 /**
-  @function collidesWithOneOf() -> boolean
+  @method collidesWithOneOf() -> boolean
   @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie aangeroepen wordt.
   @param {[Element]} elements een array van elementen
   @return boolean false if there are no collisions otherwise true
@@ -136,25 +171,111 @@ Element.prototype.collidesWithOneOf = function (elements) {
 };
 
 /** 
- * @function canMove(direction) -> boolean
- * @desc methode van snake geeft aan of deze (head) in de aangegeven richting kan bewegen
+ * @method canMove(direction) -> boolean
+ * @desc methode van Snake geeft aan of deze (head) in de aangegeven richting kan bewegen
  * 
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
  * @return boolean true if the head of snake can move otherwise false 
  */
+
 Snake.prototype.canMove = function(direction) {
-    var head = snake.segments[snake.segments.length-1];
-    return (head.y >= XMIN && head.y <= YMAX && head.x >= XMIN && head.x <= XMAX);
+    
+    switch(direction) {
+        case UP:
+          return (this.head().y >= YMIN + STEP); 
+          break;
+        case DOWN:
+          return this.head().y <= YMAX - STEP;
+          break;
+        case LEFT:
+          return this.head().x >= XMIN + STEP;
+          break;
+        case RIGHT:
+          return this.head().x <= XMAX - STEP;
+          break;
+        default:
+            return false;        
+    };
 }
 
+/**
+ * @method doMove(direction) -> void 
+ * @desc methode van Snake beweegt de slang over het veld en eet het food
+ *
+ * stap 1: creeer een nieuwe head -> moveTo
+ * stap 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> pop het eerste element van de lijst 
+ *         Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat(x,y)
+ * Stap 3: kleur de huidige kop van de slang als de rest 
+ * Stap 4: voeg de nieuwe head toe
+ * Stap 5: creeer een nieuw snake object
+ *
+ * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
+ */
+  
+Snake.prototype.doMove = function(direction) {
+    var newHead = moveTo(this.head(), direction);
+    if (!(newHead.collidesWithOneOf(foods))) { 
+        this.segments.shift();
+        }
+    else {
+            eat(newHead.x, newHead.y);
+    }
+    this.head().color=SNAKE;
+    this.segments.push(newHead);
+    snake = new Snake(this.segments);
+}
+ /**
+ * @method head() -> last element of snake element 
+ * @desc methode om het head element op te vragen van Snake
+ * @return {Element} het head element
+ */
+ Snake.prototype.head = function () { return this.segments[this.segments.length-1]; }
+ 
 
 /***************************************************************************
  **                 Hulpfuncties                                          **
  ***************************************************************************/
 
+ /**
+  *@function moveTo -> element
+  *@desc creates a new element at the desired position
+  *
+  *@param {Element} head the head of the snake
+  *@param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
+  * 
+  *@return {Element} nieuw element
+  */
+function moveTo(head, direction) { 
+  switch(direction) {
+      case UP:
+        return createSegment(head.x, head.y - STEP);
+        break;
+      case DOWN:
+        return createSegment(head.x, head.y + STEP);
+        break;
+      case LEFT:
+        return createSegment(head.x - STEP, head.y);
+        break;
+      case RIGHT:
+        return createSegment(head.x + STEP, head.y);
+        break;       
+    };  
+} 
+
+/**
+ * @function eat(x,y) -> void
+ * @desc eat the food with this x-coordinate and y-coordinate
+ *
+ * @param {int} x-coordinate
+ * @param {int} y-coordinate
+ */
+function eat(x,y) {
+    foods = foods.filter(food => !(food.x === x && food.y === y));
+}    
+
 /**
   @function createStartSnake() -> Snake
-  @desc Slang creëren, bestaande uit  twee segmenten, 
+  @desc Slang creëren, bestaande uit twee segmenten, 
         in het midden van het veld
   @return: slang volgens specificaties
 */
@@ -215,7 +336,7 @@ function getRandomInt(min, max) {
   @desc [Element] array van random verdeelde voedselpartikelen
   @return [Element] array met food
 */
-function createFoods() {
+function createFoods() {   
     var i, food;
     i = 0;
     //we gebruiken een while omdat we, om een arraymethode te gebruiken, eerst een nieuw array zouden moeten creëren (met NUMFOODS elementen)
