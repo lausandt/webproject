@@ -1,26 +1,45 @@
 "use strict";
 
 $(document).ready(function () {
-    $("#show-menu").click(toggleMenu());
-    $(window).resize(toggleMenuOnResize());
+    $("#show-menu").click(function () { toggleMenu(); });
+    $(window).resize(function() { toggleMenuOnResize(); });
 });
 
 /*************************************************************************************************
  **                                            UI                                               **
  *************************************************************************************************/
+
+ /**
+  * @function showMenu() -> void
+  * @desc Zet het CSS-attribuut "display" op "block" waardoor het menu getoond wordt.
+  */
+function showMenu() {
+    $(".menu").css("display", "block");
+}
+
+/**
+  * @function showMenu() -> void
+  * @desc Zet het CSS-attribuut "display" op "none" waardoor het menu verstopt wordt.
+  */
+function hideMenu() {
+    $(".menu").css("display", "none");
+}
+
 /**
 * @function toggleMenu() -> void
-* @desc Laat menu tonen of weghalen aan de hand van de huidige status van het menu.
+* @desc Laat menu tonen of verstoppen aan de hand van de huidige status van het menu.
 */
 function toggleMenu() {
-    var isClicked = $("#show-menu").hasClass("clicked");
-    if (!isClicked) {
-      $(".menu").css("display", "block");
+    var isShowing = $("#show-menu").hasClass("clicked");
+    if (!isShowing) {
+      showMenu();
     } else {
-      $(".menu").css("display", "none");
+      hideMenu();
     }
     $("#show-menu").toggleClass("clicked");
+    $(".menu").toggleClass("shown");
 }
+
 
 /**
 * @function toggleMenuOnResize() -> void
@@ -29,12 +48,12 @@ function toggleMenu() {
 */
 function toggleMenuOnResize() {
     if (window.innerWidth >= 641) {
-        $(".menu").css("display", "block");
+        showMenu();
     }
     if (window.innerWidth <= 640) {
-        var isClicked = $("#show-menu").hasClass("clicked");
-        if (!isClicked) {
-            $(".menu").css("display", "none");
+        var isShowing = $("#show-menu").hasClass("clicked");
+        if (!isShowing) {
+            hideMenu();
         }
     }
 }
