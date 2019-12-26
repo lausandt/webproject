@@ -26,72 +26,19 @@ const
 var snake,
     foods = [];                 // voedsel voor de slang
 
-$(document).ready(function () {
-    $("#startSnake").click(init);
-    $("#stopSnake").click(stop);
-    $("#show-menu").click(function () {
-      toggleMenu();
-    });
-    $(window).resize(function () {
-      toggleMenuOnResize();
-    });
+$(document).ready(function() {
+	$("#startSnake").click(init);  
+	$("#stopSnake").click(stop);
 });
 
-/*************************************************************************************************
- **                                            UI                                               **
- *************************************************************************************************/
-/**
-* @function toggleMenu() -> void
-* @desc Laat menu tonen of weghalen aan de hand van de huidige status van het menu.
-*/
-function toggleMenu() {
-    var isClicked = $("#show-menu").hasClass("clicked");
-    if (!isClicked) {
-      $(".menu").css("display", "block");
-    } else {
-      $(".menu").css("display", "none");
-    }
-    $("#show-menu").toggleClass("clicked");
-}
 
-/**
-* @function toggleMenuOnResize() -> void
-* @desc Laat menu tonen aan de hand van resize; in het geval van een kleiner scherm én niet eerder
-*       op de "toon-menu-knop" gedrukt, dan wordt het menu niet getoond.
-*/
-function toggleMenuOnResize() {
-    if (window.innerWidth >= 641) {
-        $(".menu").css("display", "block");
-    }
-    if (window.innerWidth <= 640) {
-        var isClicked = $("#show-menu").hasClass("clicked");
-        if (!isClicked) {
-            $(".menu").css("display", "none");
-        }
-    }
-}
-
-
-/*************************************************************************************************
- **                                    Nieuwe code                                              **
- *************************************************************************************************/
-
- /***************************************************************************
- **                 Constructors                                          **
- ***************************************************************************/
- /***************************************************************************
- **                 Hulpfuncties                                          **
- ***************************************************************************/
- /*************************************************************************************************
- **                                    Gegeven code                                              **
- *************************************************************************************************/
 /***************************************************************************
  **                 Commando's voor de gebruiker                          **
  ***************************************************************************/
 /**
- * @function init() -> void
+ * @function init
  * @desc Haal eventueel bestaand voedsel en een bestaande slang weg, creëer een slang, genereer voedsel, en teken alles
-*/
+ */
 function init() {
     stop();
     createStartSnake();
@@ -100,9 +47,9 @@ function init() {
 }
 
 /**
-  @function stop() -> void
-  @desc Laat slang en voedsel verdwijnen, en teken leeg veld
-*/
+ * @function stop
+ * @desc Laat slang en voedsel verdwijnen, en teken leeg veld
+ */
 function stop() {
     snake = null;
     foods = [];
@@ -110,10 +57,11 @@ function stop() {
 }
 
 /**
-  @function move(direction) -> void
-  @desc Beweeg slang in aangegeven richting tenzij slang uit canvas zou verdwijnen
-  @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
-*/
+ * @function move
+ * @desc Beweeg slang in aangegeven richting tenzij slang uit canvas zou verdwijnen
+ *
+ * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
+ */
 function move(direction) {
     if (snake.canMove(direction)) {
         snake.doMove(direction);
@@ -124,9 +72,9 @@ function move(direction) {
 }
 
 /**
-  @function draw() -> void
-  @desc Teken de slang en het voedsel
-*/
+ * @function draw
+ * @desc Teken de slang en het voedsel
+ */
 function draw() {
     var canvas = $("#mySnakeCanvas").clearCanvas();
     snake.segments.forEach(seg => drawElement(seg, canvas));
@@ -135,46 +83,54 @@ function draw() {
 /***************************************************************************
  **                 Constructors                                          **
  ***************************************************************************/
+
 /**
-   @constructor Snake
-   @param {[Element]} segments een array met aaneengesloten slangsegmenten
-                   Het laatste element van segments wordt de kop van de slang
-*/
+ * @constructor Snake
+ * @desc creëert een slang, Het laatste element van segments wordt de kop van de slang
+ * @param {[Element]} segments een array met aaneengesloten slangsegmenten
+ */
 function Snake(segments) {
     this.segments = segments;
     segments[segments.length-1].color=HEAD;
 }
- 
 
 /**
-   @constructor Element
-   @param radius straal
-   @param {number} x x-coordinaat middelpunt
-   @param {number} y y-coordinaat middelpunt
-   @param {string} color kleur van het element
-*/
+ * @constructor Element
+ * @desc creeert een element 
+ * 
+ * @param {number} radius straal van het element
+ * @param {number} x x-coordinaat op het canvas
+ * @param {number} y y-coordinaat op het canvas
+ * @param {string} color kleur van het element
+ */
 function Element(radius, x, y, color) {
     this.radius = radius;
     this.x = x;
     this.y = y;
     this.color = color;
 }
-
+/***************************************************************************
+ **                 Methoden                                              **
+ ***************************************************************************/
 /**
-  @method collidesWithOneOf() -> boolean
-  @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie aangeroepen wordt.
-  @param {[Element]} elements een array van elementen
-  @return boolean false if there are no collisions otherwise true
-*/
+ * @method collidesWithOneOf
+ * @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie wordt aangeroepen.
+ *
+ * @param {[Element]} elements een Array van elementen objecten
+ *
+ * @return boolean false if there are no collisions otherwise true
+ *
+ */
 Element.prototype.collidesWithOneOf = function (elements) {
     return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
 };
 
 /** 
- * @method canMove(direction) -> boolean
+ * @method canMove
  * @desc methode van Snake geeft aan of deze (head) in de aangegeven richting kan bewegen
- * 
+ *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
+ *
  * @return boolean true if the head of snake can move otherwise false 
  */
 
@@ -195,15 +151,15 @@ Snake.prototype.canMove = function(direction) {
 }
 
 /**
- * @method doMove(direction) -> void 
- * @desc methode van Snake beweegt de slang over het veld en eet het food
- *
- * stap 1: creeer een nieuwe head -> moveTo
- * stap 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> pop het eerste element van de lijst 
- *         Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat(x,y)
- * Stap 3: kleur de huidige kop van de slang als de rest 
- * Stap 4: voeg de nieuwe head toe
- * Stap 5: creeer een nieuw snake object
+ * @method doMove
+ * @descmethode van Snake, beweegt de slang over het veld en eet het food
+ * 
+ * - 1: creëer een nieuwe head -> moveTo 
+ * - 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> pop het eerste element van de lijst 
+ *      Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat(x,y)
+ * - 3: kleur de huidige kop van de slang als de rest 
+ * - 4: voeg de nieuwe head toe
+ * - 5: creëer een nieuw snake object
  *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
  */
@@ -220,10 +176,11 @@ Snake.prototype.doMove = function(direction) {
     this.segments.push(newHead);
     snake = new Snake(this.segments);
 }
- /**
- * @method head() -> last element of snake element 
- * @desc methode om het head element op te vragen van Snake
- * @return {Element} het head element
+/**
+ * @method head
+ * @desc methode om het head segment op te vragen van Snake
+ *
+ * @return {Element} het head segment
  */
  Snake.prototype.head = function () { return this.segments[this.segments.length-1]; }
  
@@ -233,13 +190,13 @@ Snake.prototype.doMove = function(direction) {
  ***************************************************************************/
 
  /**
-  *@function moveTo -> element
-  *@desc creates a new element at the desired position
+  *@function moveTo
+  *@desc creates a new segment at the desired position
   *
   *@param {Element} head the head of the snake
   *@param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
   * 
-  *@return {Element} nieuw element
+  *@return {Element} nieuw segment
   */
 function moveTo(head, direction) { 
   switch(direction) {
@@ -259,53 +216,57 @@ function moveTo(head, direction) {
 } 
 
 /**
- * @function eat(x,y) -> void
- * @desc eat the food with this x-coordinate and y-coordinate
- *
- * @param {int} x-coordinate
- * @param {int} y-coordinate
+ * @function eat
+ * @desc verwijder food met deze (x,y)- coordinaten uit FOODS
+ * @param {number} x x-coordinate
+ * @param {number} y y-coordinate
  */
 function eat(x,y) {
     foods = foods.filter(food => !(food.x === x && food.y === y));
 }    
 
 /**
-  @function createStartSnake() -> Snake
-  @desc Slang creëren, bestaande uit twee segmenten, 
-        in het midden van het veld
-  @return: slang volgens specificaties
-*/
+ * @function createStartSnake
+ * @desc Slang creëren, bestaande uit twee segmenten in het midden van het veld
+ *
+ * @return: slang volgens specificaties
+ */
 function createStartSnake() {
     var segments   = [createSegment(R + WIDTH/2, R + WIDTH/2), 
                    createSegment(R + WIDTH/2, WIDTH/2 - R)];
     snake = new Snake(segments);
 }
 /**
-  @function createSegment(x,y) -> Element
-  @desc Slangsegment creeren op een bepaalde plaats
-  @param {number} x x-coordinaat middelpunt
-  @param {number} y y-coordinaart middelpunt
-  @return: {Element} met straal R en color SNAKE
-*/
+ * @function createSegment
+ * @desc Slangsegment creeren op een bepaalde plaats
+ *
+ * @param {number} x x-coordinaat middelpunt
+ * @param {number} y y-coordinaart middelpunt
+ *
+ * @return: {Element} element object met straal R en color SNAKE
+ */
 function createSegment(x, y) {
     return new Element(R, x, y, SNAKE);
 }
 /**
-  @function createFood(x,y) -> Element
-  @desc Voedselelement creeren op een bepaalde plaats
-  @param {number} x x-coordinaat middelpunt
-  @param {number} y y-coordinaart middelpunt
-  @return: {Element} met straal R en color FOOD
-*/
+ * @function createFood
+ * @desc Voedselelement creeren op een bepaalde plaats
+ *
+ * @param {number} x x-coordinaat middelpunt
+ * @param {number} y y-coordinaart middelpunt
+ *
+ * @return: {Element} met straal R en color FOOD
+ */
 function createFood(x, y) {
     return new Element(R, x, y, FOOD);
 }
 /**
-  @function drawElement(element, canvas) -> void
-  @desc Een element tekenen 
-  @param {Element} element een Element object
-  @param  {dom object} canvas het tekenveld
-*/
+ * @function drawElement
+ * @desc Een voedsel element tekenen 
+ *
+ * @param {Element} element een element object
+ * @param {canvas} dom object canvas = het tekenveld
+ */
 function drawElement(element, canvas) {
     canvas.drawArc({
         draggable: false,
@@ -317,21 +278,24 @@ function drawElement(element, canvas) {
 }
 
 /**
-  @function getRandomInt(min: number, max: number) -> number
-  @desc Creeren van random geheel getal in het interval [min, max] 
-  @param {number} min een geheel getal als onderste grenswaarde
-  @param {number} max een geheel getal als bovenste grenswaarde (max > min)
-  @return {number} een random geheel getal x waarvoor geldt: min <= x <= max
-*/
+ * @function getRandomInt
+ * @desc Creeren van random geheel getal in het interval [min, max] 
+ *
+ * @param {number} min een geheel getal als onderste grenswaarde
+ * @param {number} max een geheel getal als bovenste grenswaarde (max > min)
+ *
+ * @return {number} een random geheel getal x waarvoor geldt: min <= x <= max
+ */
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /**
-  @function createFoods() -> array met food
-  @desc [Element] array van random verdeelde voedselpartikelen
-  @return [Element] array met food
-*/
+ * @function createFoods
+ * @desc [Element] array van random verdeelde voedselpartikelen
+ *
+ * @return {[Element]} array met food elementen
+ */
 function createFoods() {   
     var i, food;
     i = 0;
