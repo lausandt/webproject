@@ -87,7 +87,8 @@ function draw() {
 /**
  * @constructor Snake
  * @desc creëert een slang, Het laatste element van segments wordt de kop van de slang
- * @param {[Element]} segments een array met aaneengesloten slangsegmenten
+ * 
+ * @param {Element[]} segments een array met aaneengesloten slangsegmenten
  */
 function Snake(segments) {
     this.segments = segments;
@@ -114,11 +115,11 @@ function Element(radius, x, y, color) {
  ***************************************************************************/
 /**
  * @method collidesWithOneOf
- * @desc Retourneert true als één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie wordt aangeroepen.
+ * @desc controleert of één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie wordt aangeroepen.
  *
- * @param {[Element]} elements een Array van elementen objecten
+ * @param {Element[]} elements een Array van elementen objecten
  *
- * @return boolean false if there are no collisions otherwise true
+ * @return {boolean} false if there are no collisions, true otherwise 
  *
  */
 Element.prototype.collidesWithOneOf = function (elements) {
@@ -131,7 +132,7 @@ Element.prototype.collidesWithOneOf = function (elements) {
  *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
  *
- * @return boolean true if the head of snake can move otherwise false 
+ * @return {boolean} true if the head of snake can move, false otherwise  
  */
 
 Snake.prototype.canMove = function(direction) {
@@ -152,14 +153,14 @@ Snake.prototype.canMove = function(direction) {
 
 /**
  * @method doMove
- * @desc methode van Snake, beweegt de slang over het veld en eet het food volgens het onderstaande algoritme
+ * @desc methode van Snake, beweegt de slang over het veld en eet het food volgens het onderstaande algoritme:
  * 
  * - 1: creëer een nieuwe head -> moveTo 
- * - 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> pop het eerste element van de lijst 
- *      Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat(x,y)
+ * - 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> shift
+ *      Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat
  * - 3: kleur de huidige kop van de slang als de rest 
- * - 4: voeg de nieuwe head toe
- * - 5: creëer een nieuw snake object
+ * - 4: voeg de nieuwe head toe -> push
+ * - 5: creëer een nieuw snake object -> Snake
  *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
  */
@@ -217,7 +218,7 @@ function moveTo(head, direction) {
 
 /**
  * @function eat
- * @desc verwijder food met deze (x,y)- coordinaten uit FOODS
+ * @desc verwijder food met deze (x,y)- coordinaten uit var foods
  * @param {number} x x-coördinaat middelpunt
  * @param {number} y y-coördinaat middelpunt
  */
@@ -228,14 +229,13 @@ function eat(x,y) {
 /**
  * @function createStartSnake
  * @desc Slang creëren, bestaande uit twee segmenten in het midden van het veld
- *
- * @return: slang volgens specificaties
  */
 function createStartSnake() {
     var segments   = [createSegment(R + WIDTH/2, R + WIDTH/2), 
                    createSegment(R + WIDTH/2, WIDTH/2 - R)];
     snake = new Snake(segments);
 }
+
 /**
  * @function createSegment
  * @desc Slangsegment creeren op een bepaalde plaats
@@ -262,10 +262,10 @@ function createFood(x, y) {
 }
 /**
  * @function drawElement
- * @desc Een voedsel element tekenen 
+ * @desc Een voedsel of snake element tekenen 
  *
- * @param {Element} element een element object
- * @param {canvas} dom object canvas = het tekenveld
+ * @param {Element} element een element object (food/snake)
+ * @param {canvas} dom object canvas (is het tekenveld)
  */
 function drawElement(element, canvas) {
     canvas.drawArc({
@@ -292,9 +292,7 @@ function getRandomInt(min, max) {
 
 /**
  * @function createFoods
- * @desc [Element] array van random verdeelde voedselpartikelen
- *
- * @return {[Element]} array met food elementen
+ * @desc pushed random verdeelde voedselelementen op var foods 
  */
 function createFoods() {   
     var i, food;
