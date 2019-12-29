@@ -1,14 +1,13 @@
-/* public/sum.test.js */
-
+"use strict";
 describe("#init()", function() {
   context("Zonder input", function() {
     it("Maakt nieuwe slang van 2 segmenten", function() {
       init();
-      expect(snake.segments.length).to.equal(2)
+      expect(snake.segments.length).to.equal(2);
     });
     it("Vijftien stuks voedsel aangemaakt", function() {
       init();
-      expect(foods.length).to.equal(15)
+      expect(foods.length).to.equal(15);
     });
   });
 });
@@ -22,7 +21,7 @@ describe("#stop()", function() {
     it("Al het voedsel weggehaald", function() {
       stop();
       expect(foods.length).to.equal(0);
-    })
+    });
   });
 });
 
@@ -78,13 +77,12 @@ describe ("#canMove()", function() {
       init();
       // Zet hoofd van slang op YMAX
       snake.head().y = YMAX;
-      
       expect(snake.canMove(RIGHT)).to.equal(true);
       expect(snake.canMove(LEFT)).to.equal(true);
       expect(snake.canMove(UP)).to.equal(true);
       expect(snake.canMove(DOWN)).to.equal(false);
     });
-  })
+  });
 });
 
 describe("#move()", function() {
@@ -128,6 +126,32 @@ describe("#move()", function() {
       expect(snake.head().x).to.equal(currentX);
       // Wel omhoog
       expect(snake.head().y).to.equal(currentY - STEP);
+    });
+    it("Slang staat naast voedselstukje, eet deze op en wordt één segment langer", function() {
+      init();
+      var currentSnakeLength = snake.segments.length;
+      var currentX = snake.head().x;
+      var currentY = snake.head().y;
+      var food = foods[0];
+      food.x = currentX + STEP;
+      food.y = currentY;
+      move(RIGHT);
+      expect(snake.segments.length).to.equal(currentSnakeLength + 1);
+      expect(foods.length).to.equal(NUMFOODS - 1);
+    });
+    it("Slang eet alle voedselstukjes op, wordt totaal aantal voedselstukjes langer, voedsel is op", function() {
+      init();
+      //TODO: Fix probleem met slang die over zichzelf heen beweegt.
+      //      Probleem ontstaat wanneer we collision tussen head en slang bouwen.
+      var currentSnakeLength = snake.segments.length;
+      foods.forEach(food => {
+        food.x = snake.head().x + STEP;
+        food.y = snake.head().y;
+        move(RIGHT);
+        move(LEFT);
+      });
+      expect(foods.length).to.equal(0);
+      expect(snake.segments.length).to.equal(currentSnakeLength + NUMFOODS);
     });
   });
 
@@ -271,7 +295,6 @@ describe("#eat()", function() {
       var foodToEat = foods[0];
       eat(foodToEat.x, foodToEat.y);
       expect(foods.filter(food => food.x === foodToEat.x && food.y === foodToEat.y).length).to.equal(0);
-      
     });
     it("Voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 14", function() {
       init();
@@ -279,7 +302,6 @@ describe("#eat()", function() {
       eat(foodToEat.x, foodToEat.y);
       expect(foods.length).to.equal(NUMFOODS-1);
     });
-
     it("Alle voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 0", function() {
       init();
       foods.forEach(food => eat(food.x, food.y));
