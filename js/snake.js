@@ -48,7 +48,7 @@ function init() {
 
 /**
  * @function stop
- * @desc Laat slang en voedsel verdwijnen, en teken leeg veld
+ * @desc Laat slang en voedsel verdwijnen, en teken leeg veld (verwijder alle elementen)
  */
 function stop() {
     snake = null;
@@ -138,7 +138,7 @@ Snake.prototype.canMove = function(direction) {
     
     switch(direction) {
         case UP:
-          return (this.head().y >= YMIN + STEP); 
+          return this.head().y >= YMIN + STEP; 
         case DOWN:
           return this.head().y <= YMAX - STEP;
         case LEFT:
@@ -152,7 +152,7 @@ Snake.prototype.canMove = function(direction) {
 
 /**
  * @method doMove
- * @descmethode van Snake, beweegt de slang over het veld en eet het food
+ * @desc methode van Snake, beweegt de slang over het veld en eet het food volgens het onderstaande algoritme
  * 
  * - 1: creëer een nieuwe head -> moveTo 
  * - 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> pop het eerste element van de lijst 
@@ -218,8 +218,8 @@ function moveTo(head, direction) {
 /**
  * @function eat
  * @desc verwijder food met deze (x,y)- coordinaten uit FOODS
- * @param {number} x x-coordinate
- * @param {number} y y-coordinate
+ * @param {number} x x-coördinaat middelpunt
+ * @param {number} y y-coördinaat middelpunt
  */
 function eat(x,y) {
     foods = foods.filter(food => !(food.x === x && food.y === y));
@@ -240,22 +240,22 @@ function createStartSnake() {
  * @function createSegment
  * @desc Slangsegment creeren op een bepaalde plaats
  *
- * @param {number} x x-coordinaat middelpunt
- * @param {number} y y-coordinaart middelpunt
+ * @param {number} x x-coördinaat middelpunt
+ * @param {number} y y-coördinaat middelpunt
  *
- * @return: {Element} element object met straal R en color SNAKE
+ * @return {Element} element object met straal R en color SNAKE
  */
 function createSegment(x, y) {
     return new Element(R, x, y, SNAKE);
 }
 /**
  * @function createFood
- * @desc Voedselelement creeren op een bepaalde plaats
+ * @desc Voedselelement creëren op een bepaalde plaats
  *
- * @param {number} x x-coordinaat middelpunt
- * @param {number} y y-coordinaart middelpunt
+ * @param {number} x x-coördinaat middelpunt
+ * @param {number} y y-coördinaat middelpunt
  *
- * @return: {Element} met straal R en color FOOD
+ * @return {Element} element object met straal R en color FOOD
  */
 function createFood(x, y) {
     return new Element(R, x, y, FOOD);
