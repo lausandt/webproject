@@ -2,7 +2,7 @@ Opmerkingen mbt de code.
 
 Waar mogelijk hebben we de code geschreven in een functionele stijl. Voor ons houdt dat de volgende zaken in:
 
-Functies doen zo veel mogelijk één ding. Als een functie meerdere zaken moet uitvoeren dan brengen we de benodigde functionaliteit zoveel mogelijk onder in hulpfuncties
+Functies doen zo veel mogelijk één ding. Als een functie meerdere zaken moet uitvoeren dan brengen we de benodigde functionaliteit zoveel mogelijk onder in hulpfuncties. 
 
 Variabelen worden zoveel mogelijk vermeden, en alleen gebruikt om de code duidelijker te maken voor de lezer.
 
@@ -14,7 +14,9 @@ canMove xs | xs == UP    = heady >= YMIN
            | xs == DOWN  = heady <= YMAX
            | xs == LEFT  = headx >= XMIN
            | xs == RIGHT = headx <= XMAX
-           | otherwise   = False        
+           | otherwise   = False 
+
+In JavaScript is de keuze voor switch/case met deze redenering in gedachte gauw gemaakt.
 
 Waar mogelijk worden lambda's (=>) gebruikt ipv anonieme functies. 
 
