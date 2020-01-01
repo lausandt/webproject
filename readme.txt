@@ -19,7 +19,7 @@ canMove xs | xs == UP    = heady >= YMIN
 Waar mogelijk worden lambda's (=>) gebruikt ipv anonieme functies. 
 
 - Het gebruik van lambda's is in onze opinie zuiverder dan anonieme functies want ipv de interpreter te vertellen hoe iets te doen, vertellen we wat gedaan moet worden en laten we hoe over aan de interpreter
-- Tevens lost het gebruik van lambda's jullie aandachtspunt met this.color op (zie pagina 7 van de projectomschrijving) bv in onze oplossing:
+- Tevens lost het gebruik van lambda's jullie aandachtspunt met this.color op (zie pagina 7 van de projectomschrijving). Bv in onze oplossing:
 
 Element.prototype.collidesWithOneOf = function (elements) {
     return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
@@ -29,9 +29,9 @@ Waar mogelijk worden functies zoals map, filter, en reduce (ism lambda's) gebrui
 
 Het spreekt voor zich dat het compleet functioneel maken van snake.js een andere datastructuur vergt dan de huidige. Omdat dit verandering van jullie code vergt is dat natuurlijk niet gedaan. 
 
-Wel hebben we de vrijheid genomen om jullie JSDOC aan te passen deze geeft errors ({[Element]} zou moeten zijn {Element[]}) en geeft aan dingen te retourneren terwijl dit niet het geval is. (Zie doc createFoods()) Opvallend is dat summations niet werken in JSDOC die gecompileerd wordt met node.js
+Wel hebben we de vrijheid genomen om jullie JSDOC aan te passen deze geeft errors ({[Element]} zou moeten zijn {Element[]}) en geeft aan dingen te retourneren terwijl dit niet het geval is. (Zie doc createFoods()) Opvallend is dat summations (bullits)  niet werken in JSDOC die gemaakt wordt met node.js (dit zou wel werken als gemaakt binnen eclipse maar is niet getest)  
  
-
+Tests...
 
 
 
