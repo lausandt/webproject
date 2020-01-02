@@ -33,8 +33,10 @@ Het spreekt voor zich dat het compleet functioneel maken van snake.js een andere
 
 Wel hebben we de vrijheid genomen om jullie JSDOC aan te passen deze geeft errors ({[Element]} zou moeten zijn {Element[]}) en geeft aan dingen te retourneren terwijl dit niet het geval is. (Zie doc createFoods()) Opvallend is dat summations (bullits)  niet werken in JSDOC die gemaakt wordt met node.js (dit zou wel werken als gemaakt binnen eclipse maar is niet getest)  
  
-Tests...
+Tests
+Bij de tests hebben we gebruik gemaakt van Mocha en Chai. Er is gekeken naar de functionaliteiten die we hebben opgeleverd en elke functionaliteit wordt op meerdere manieren getest.
+Waar we beginnen met een "happy flow"-test, gaan we daarna door naar tests die edge-cases afhandelen (Word je tegengehouden bij de rand van het canvas? Kan je nog een andere kant op als je op één van de randen staat?).
+Tevens zijn er tests opgenomen die op dit moment nog werken maar zullen vervallen als we meer functionaliteit gaan toevoegen (denk hierbij aan collision tussen hoofd van slang en lichaam van slang).
 
-
-
-
+Elke testcase bouwt zijn eigen state op om zodoende geen last te hebben van voorgaande tests; bijna overal wordt een init() uitgevoerd om het spel opnieuw te beginnen en alle onderdelen op een initiele staat te zetten, waarna we b.v. het snake-object verplaatsen voor de rest van de test.
+De tests kunnen worden opgeroepen door test.html te openen. Deze maakt gebruik van snake.test.js om zodoende alle tests uit te voeren.
