@@ -31,7 +31,7 @@ Waar mogelijk worden functies zoals map, filter, en reduce (ism lambda's) gebrui
 
 Het spreekt voor zich dat het compleet functioneel maken van snake.js een andere datastructuur vergt dan de huidige. Omdat dit verandering van jullie code vergt is dat natuurlijk niet gedaan. 
 
-Wel hebben we de vrijheid genomen om jullie JSDOC aan te passen deze geeft errors ({[Element]} zou moeten zijn {Element[]}) en geeft aan dingen te retourneren terwijl dit niet het geval is. (Zie doc createFoods()) Opvallend is dat summations (bullits)  niet werken in JSDOC die gemaakt wordt met node.js (dit zou wel werken als gemaakt binnen eclipse maar is niet getest)  
+Wel hebben we de vrijheid genomen om jullie JSDOC aan te passen deze geeft errors ({[Element]} zou moeten zijn {Element[]}) en geeft aan dingen te retourneren terwijl dit niet het geval is. (Zie doc createFoods())  
  
 Tests
 Bij de tests hebben we gebruik gemaakt van Mocha en Chai. Er is gekeken naar de functionaliteiten die we hebben opgeleverd en elke functionaliteit wordt op meerdere manieren getest.
