@@ -21,14 +21,23 @@ const
 
     SNAKE = "DarkRed",          // kleur van een slangsegment
     FOOD = "Olive",             // kleur van voedsel
-    HEAD = "DarkOrange";        // kleur van de kop van de slang
+    HEAD = "DarkOrange",        // kleur van de kop van de slang
+
+    SERVER_URL = "http://localhost/game/snake",
+    USE_SERVER = false,         // Maken we gebruik van de server (==true) of localstorage (==false) voor opslag van game?
+    USER = "user",              // Username voor onze "server"
+    PASSWORD = "password";      // Wachtwoord voor onze "server"
 
 var snake,
     foods = [];                 // voedsel voor de slang
 
+var game = new Game();          // Bijhouden welke game dit is en wat de score is.
+
 $(document).ready(function() {
-	$("#startSnake").click(init);  
-	$("#stopSnake").click(stop);
+    $("#startSnake").click(init);
+    $("#stopSnake").click(stop);
+    $("#saveGame").click(game.save);
+    $("#loadGame").click(game.load);
 });
 
 
@@ -85,6 +94,18 @@ function draw() {
  ***************************************************************************/
 
 /**
+ * @constructor Game
+ * @desc creëert een spelobject waar we de naam, het aantal maal gespeeld, het aantal wins en het aantal losses in opslaan. 
+ * Ook de naam van de speler slaan we op.
+ */
+ function Game() {
+    this.name = "";
+    this.plays = 0;
+    this.wins = 0;
+    this.losses = 0;
+}
+
+/**
  * @constructor Snake
  * @desc creëert een slang, Het laatste element van segments wordt de kop van de slang
  * 
@@ -136,7 +157,6 @@ Element.prototype.collidesWithOneOf = function (elements) {
  */
 
 Snake.prototype.canMove = function(direction) {
-    
     switch(direction) {
         case UP:
           return this.head().y >= YMIN + STEP; 
@@ -147,7 +167,7 @@ Snake.prototype.canMove = function(direction) {
         case RIGHT:
           return this.head().x <= XMAX - STEP;
         default:
-            return false;        
+            return false;
     };
 }
 
@@ -164,18 +184,24 @@ Snake.prototype.canMove = function(direction) {
  *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
  */
-  
 Snake.prototype.doMove = function(direction) {
     var newHead = moveTo(this.head(), direction);
-    if (!(newHead.collidesWithOneOf(foods))) { 
-        this.segments.shift();
+    var body = this.segments.slice(0, this.segments.length-1);
+    if(newHead.collidesWithOneOf(body)) {
+        // Verlies game
+        game.lose();
+    } else {
+        if (!(newHead.collidesWithOneOf(foods))) {
+            this.segments.shift();
         }
-    else {
+        else {
             eat(newHead.x, newHead.y);
+        }
+        this.head().color=SNAKE;
+        this.segments.push(newHead);
+        snake = new Snake(this.segments);
+        draw();
     }
-    this.head().color=SNAKE;
-    this.segments.push(newHead);
-    snake = new Snake(this.segments);
 }
 /**
  * @method head
@@ -184,7 +210,72 @@ Snake.prototype.doMove = function(direction) {
  * @return {Element} het head segment
  */
  Snake.prototype.head = function () { return this.segments[this.segments.length-1]; }
+
+ Game.prototype.load = function() {
+    var response;
+    game.name = window.prompt("Voer je naam in");
+    if(USE_SERVER === true) {
+        // Laad game via Ajax
+        response = JSON.parse($.ajax(SERVER_URL + "/" + game.name,
+        {
+            type: GET,
+            username: USER,
+            password: PASSWORD
+        }
+    ));
+    } else {
+        // Laad game uit local storage
+        var foundItem = localStorage.getItem(game.name);
+        if(foundItem !== null) {
+            response = JSON.parse(foundItem);
+        }
+    }
+    if(response !== null) {
+        game.name = response.name;
+        game.wins = response.wins;
+        game.losses = response.losses;
+        game.plays = response.plays;
+        game.update();
+    }
+ }
+
+ Game.prototype.save = function() {
+    game.name = window.prompt("Voer je naam in");
+    if(USE_SERVER === true) {
+        // Save game via Ajax
+        $.ajax(SERVER_URL,
+        {
+            type: POST,
+            username: USER,
+            password: PASSWORD,
+            data: JSON.stringify(game)
+        }
+    );
+    } else {
+        // Save game naar local storage
+        localStorage.setItem(game.name, JSON.stringify(game));
+    }
+ }
+
+ Game.prototype.update = function() {
+    $("#gamesPlayed").text(game.plays);
+    $("#gamesWon").text(game.wins);
+    $("#gamesLost").text(game.losses);
+ }
+
+ Game.prototype.lose = function() {
+    console.log("VERLOREN!!!");
+    game.plays++;
+    game.losses++;
+    game.update();
+ }
  
+ Game.prototype.win = function() {
+    console.log("GEWONNEN!!!");
+    game.plays++;
+    game.wins++;
+    game.update();
+ }
 
 /***************************************************************************
  **                 Hulpfuncties                                          **

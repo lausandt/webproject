@@ -3,7 +3,7 @@
     <head>
         <title>Mijn spelletjessite</title>
         <link rel="stylesheet" href="stijl.css" />
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
     </head>
     <body>
         <div class="container">
@@ -28,9 +28,18 @@
             </div>
             <div class="content">
                 <h2>Snake</h2>
+                <div class="score">
+                    <p>Gespeeld: <span id="gamesPlayed">0</span></p>
+                    <p>Gewonnen: <span id="gamesWon">0</span></p>
+                    <p>Verloren: <span id="gamesLost">0</span></p>
+                </div>
                 <div class="spel-controls">
                     <button id="startSnake">Start</button>
                     <button id="stopSnake">Stop</button>
+                </div>
+                <div class="spel-controls">
+                    <button id="saveGame">Save <i class="far fa-save"></i></button>
+                    <button id="loadGame">Load <i class="fas fa-download"></i></button>
                 </div>
                 <div class="spel">
                     <canvas id="mySnakeCanvas" width="360" height="360"></canvas>     
