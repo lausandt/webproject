@@ -40,3 +40,20 @@ Tevens zijn er tests opgenomen die op dit moment nog werken maar zullen vervalle
 
 Elke testcase bouwt zijn eigen state op om zodoende geen last te hebben van voorgaande tests; bijna overal wordt een init() uitgevoerd om het spel opnieuw te beginnen en alle onderdelen op een initiele staat te zetten, waarna we b.v. het snake-object verplaatsen voor de rest van de test.
 De tests kunnen worden opgeroepen door test.html te openen. Deze maakt gebruik van snake.test.js om zodoende alle tests uit te voeren.
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------
+
+De input voor het opslaan van de game ziet eruit als volgt:
+{
+    "name": "Name here",
+    "plays": "0",
+    "wins": "0",
+    "losses": "0"
+}
+Door de name te gebruiken als value voor het opslaan/laden van de juiste gegevens kunnen we meerdere games opslaan en terughalen op/van de server (of de localStorage).
+Aangezien dit direct mapt op het gemaakte "game"-object kunnen we die makkelijk naar de server (of localStorage) mappen door JSON.stringify(game) te doen, waarna bovenstaande JSON-String ontstaat.

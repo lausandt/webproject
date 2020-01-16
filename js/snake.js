@@ -12,7 +12,7 @@ const
     UP = "up",
     DOWN = "down",
 
-    NUMFOODS = 15,              // aantal voedselelementen
+    NUMFOODS = 5,               // aantal voedselelementen
 
     XMIN = R,                   // minimale x waarde
     YMIN = R,                   // minimale y waarde
@@ -36,8 +36,12 @@ var game = new Game();          // Bijhouden welke game dit is en wat de score i
 $(document).ready(function() {
     $("#startSnake").click(init);
     $("#stopSnake").click(stop);
-    $("#saveGame").click(game.save);
-    $("#loadGame").click(game.load);
+    $("#saveGame").click(function() {
+        game.save();
+    });
+    $("#loadGame").click(function() {
+        game.load();
+    });
 });
 
 
@@ -53,6 +57,8 @@ function init() {
     createStartSnake();
     createFoods();
     draw();
+    game.plays++;
+    game.update();
 }
 
 /**
@@ -108,7 +114,7 @@ function draw() {
 /**
  * @constructor Snake
  * @desc creëert een slang, Het laatste element van segments wordt de kop van de slang
- * 
+ *
  * @param {Element[]} segments een array met aaneengesloten slangsegmenten
  */
 function Snake(segments) {
@@ -118,8 +124,8 @@ function Snake(segments) {
 
 /**
  * @constructor Element
- * @desc creeert een element 
- * 
+ * @desc creeert een element
+ *
  * @param {number} radius straal van het element
  * @param {number} x x-coordinaat op het canvas
  * @param {number} y y-coordinaat op het canvas
@@ -140,7 +146,7 @@ function Element(radius, x, y, color) {
  *
  * @param {Element[]} elements een Array van elementen objecten
  *
- * @return {boolean} false if there are no collisions, true otherwise 
+ * @return {boolean} false if there are no collisions, true otherwise
  *
  */
 Element.prototype.collidesWithOneOf = function (elements) {
@@ -159,7 +165,7 @@ Element.prototype.collidesWithOneOf = function (elements) {
 Snake.prototype.canMove = function(direction) {
     switch(direction) {
         case UP:
-          return this.head().y >= YMIN + STEP; 
+          return this.head().y >= YMIN + STEP;
         case DOWN:
           return this.head().y <= YMAX - STEP;
         case LEFT:
@@ -186,8 +192,7 @@ Snake.prototype.canMove = function(direction) {
  */
 Snake.prototype.doMove = function(direction) {
     var newHead = moveTo(this.head(), direction);
-    var body = this.segments.slice(0, this.segments.length-1);
-    if(newHead.collidesWithOneOf(body)) {
+    if(newHead.collidesWithOneOf(this.body())) {
         // Verlies game
         game.lose();
     } else {
@@ -196,6 +201,10 @@ Snake.prototype.doMove = function(direction) {
         }
         else {
             eat(newHead.x, newHead.y);
+            // Win game
+            if(foods.length == 0) {
+                game.win();
+            }
         }
         this.head().color=SNAKE;
         this.segments.push(newHead);
@@ -211,12 +220,91 @@ Snake.prototype.doMove = function(direction) {
  */
  Snake.prototype.head = function () { return this.segments[this.segments.length-1]; }
 
+ /**
+  * @method body
+  * @desc methode om alle body-segmenten (exclusief head) op te vragen van Snake
+  * 
+  * @return {Element[]} alle body segmenten (exclusief head)
+  */
+ Snake.prototype.body = function() { return this.segments.slice(0, this.segments.length-1); }
+
+ /**
+  * @method lose
+  * @desc methode die kan worden uitgevoerd als aan de voorwaarden voor het verliezen van het spel wordt voldaan.
+  */
+ Game.prototype.lose = function() {
+    console.log("VERLOREN!!!");
+    this.losses++;
+    this.update();
+    // Sla de spelstand ook op op de server
+    this.save();
+    // TODO: Stop de slang hier! Bv. snake.stop();
+ }
+
+ /**
+  * @method win
+  * @desc methode die kan worden uitgevoerd als aan de voorwaarden voor het winnen van het spel wordt voldaan.
+  */
+ Game.prototype.win = function() {
+    console.log("GEWONNEN!!!");
+    this.wins++;
+    this.update();
+    // Sla de spelstand ook op op de server
+    this.save();
+    // TODO: Stop de slang hier! Bv. snake.stop();
+ }
+
+ /**
+  * @method update
+  * @desc methode om het scorebord opnieuw te vullen met de nieuwste status
+  */
+ Game.prototype.update = function() {
+    $("#gamesPlayed").text(game.plays);
+    $("#gamesWon").text(game.wins);
+    $("#gamesLost").text(game.losses);
+ }
+
+ /**
+  * @method save
+  * @desc methode om een spel op te slaan op basis van de naam van de speler.
+  */
+ Game.prototype.save = function() {
+    this.name = $('#name').val();
+    if(this.name === "") {
+        this.name = prompt("Voer een naam in");
+        $('#name').val(this.name);
+    }
+    if(USE_SERVER === true) {
+        // Save game via Ajax
+        $.ajax(SERVER_URL,
+        {
+            type: POST,
+            username: USER,
+            password: PASSWORD,
+            data: JSON.stringify(this)
+        }
+    );
+    } else {
+        // Save game naar local storage
+        localStorage.setItem(this.name, JSON.stringify(this));
+    }
+ }
+
+ /**
+  * @method load
+  * @desc methode om een voorheen opgeslagen spel opnieuw in te laden op basis van de naam van de speler.
+  */
  Game.prototype.load = function() {
+    stop();
+    this.name = $('#name').val();
+    if(this.name === "") {
+        this.name = prompt("Voer een naam in");
+        $('#name').val(this.name);
+    }
     var response;
-    game.name = window.prompt("Voer je naam in");
     if(USE_SERVER === true) {
         // Laad game via Ajax
-        response = JSON.parse($.ajax(SERVER_URL + "/" + game.name,
+        response = JSON.parse($.ajax(SERVER_URL + "/" + this.name,
         {
             type: GET,
             username: USER,
@@ -225,56 +313,20 @@ Snake.prototype.doMove = function(direction) {
     ));
     } else {
         // Laad game uit local storage
-        var foundItem = localStorage.getItem(game.name);
+        var foundItem = localStorage.getItem(this.name);
         if(foundItem !== null) {
             response = JSON.parse(foundItem);
         }
     }
-    if(response !== null) {
-        game.name = response.name;
-        game.wins = response.wins;
-        game.losses = response.losses;
-        game.plays = response.plays;
-        game.update();
-    }
- }
-
- Game.prototype.save = function() {
-    game.name = window.prompt("Voer je naam in");
-    if(USE_SERVER === true) {
-        // Save game via Ajax
-        $.ajax(SERVER_URL,
-        {
-            type: POST,
-            username: USER,
-            password: PASSWORD,
-            data: JSON.stringify(game)
-        }
-    );
+    if(response !== undefined) {
+        this.name = response.name;
+        this.wins = response.wins;
+        this.losses = response.losses;
+        this.plays = response.plays;
+        this.update();
     } else {
-        // Save game naar local storage
-        localStorage.setItem(game.name, JSON.stringify(game));
+        alert("Geen opgeslagen spel gevonden voor de naam " + this.name);
     }
- }
-
- Game.prototype.update = function() {
-    $("#gamesPlayed").text(game.plays);
-    $("#gamesWon").text(game.wins);
-    $("#gamesLost").text(game.losses);
- }
-
- Game.prototype.lose = function() {
-    console.log("VERLOREN!!!");
-    game.plays++;
-    game.losses++;
-    game.update();
- }
- 
- Game.prototype.win = function() {
-    console.log("GEWONNEN!!!");
-    game.plays++;
-    game.wins++;
-    game.update();
  }
 
 /***************************************************************************

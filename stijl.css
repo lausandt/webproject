@@ -61,6 +61,18 @@ a:visited {
     color: #DADADA;
 }
 
+input[type=text] {
+    border: 1px solid #2b77f2;
+    border-radius: 5px;
+    padding: 2px;
+    text-align: center;
+}
+
+input:focus{
+    outline: none;
+    box-shadow: 0 0 2px 2px lightblue;
+}
+
 /*** Navigatie ***/
 .container .menu {
     background-color: #EFEFEF;
