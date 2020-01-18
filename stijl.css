@@ -14,200 +14,143 @@ time, mark, audio, video {
     margin:0;
     padding:0;
     border:0;
+    font-size:1em;
     vertical-align:baseline;
     background:transparent;
 }
-
-/*** Generiek ***/
-body {
-    width: 100%;
-    min-height: 100%;
-    padding: 1em 0;
-    margin: 0;
-    background-color: #F8F8F8;
+/*** generiek ***/
+html, body {
+    height:99%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:1em;
 }
-
-::selection {
-    color: white;
-    background: #FF7E02;
+h1 {
+    font-size: 2em;
 }
-
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    text-align: center;
+canvas {
+  background: #f8f8f8;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  display: block;
 }
-
-a, button {
-    margin: 0px;
-    text-decoration: none;
-    color: white;
+.pagetitle {
     display: block;
-    background-color: #2b77f2;
-    text-align: center;
-    color: #EFEFEF;
-    font-size: 1em;
-    border: 1px solid darkgray;
-    border-radius: 2px;
-    box-shadow: 0px 0px 5px #ABABAB;
+    border: thin solid Ivory;
+    margin:0.5em 1em 0.5em 1em;
+    border-radius: 0.5em;
 }
-
-a:hover, a.active, button:hover {
-    background-color: #FF7E02;
-    cursor: pointer;
-    color: white;
+.rounded {
+    border: thin solid Ivory; 
+    border-radius: 0.5em;
+    margin: 0.25em
 }
-
-a:visited {
-    color: #DADADA;
-}
-
-input[type=text] {
-    border: 1px solid #2b77f2;
-    border-radius: 5px;
-    padding: 2px;
-    text-align: center;
-}
-
-input:focus{
-    outline: none;
-    box-shadow: 0 0 2px 2px lightblue;
-}
-
-/*** Navigatie ***/
-.container .menu {
-    background-color: #EFEFEF;
-    box-shadow: 0px 0px 5px #ABABAB;
-    width: 20%;
-    float: left;
-}
-
-.container .menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.container .menu ul li a {
-    width: 90%;
-    padding: .25em 0;
-    margin: .75em auto;
-}
-
-.container .menu, .container .content {
-    padding: 1em 0;
-    margin: 1.5em 0;
-}
-
-.menu-popup {
-    display: none;
-}
-
-/*** Hoofdcontent ***/
+/*** Hoofdstructuur ***/
 .container {
-    width: 90%;
-    padding: 0 2.5%;
-    margin: 0px auto;
-}
-
-.container .header {
+    font-size: 1.5em;
+    height: 100%;
     width: 100%;
-    padding: .25em 0;
-    background-color: #2b77f2;
-    color: white;
-    box-shadow: 0px 0px 5px #ABABAB;
+    background: Ivory;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 12% 5% 83%;
+    grid-gap: 0.25em;
+    grid-template-areas:
+      "header header"
+      "active score"
+      "menu play-area"
+}
+.header {
+    background: LightSkyBlue;
+    grid-area: header;
+    text-align: center;
+    border-radius: 0.5em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;   
+    margin-top: 0.25em;    
 }
 
-.container .content {
-    width: 80%;
-    float: left;
-}
-
-.container .content h2 {
-    margin: 0;
-    padding: 0;
+.menu {
+    background: AquaMarine;
+    grid-area: menu;
+    border-radius: 0.5em; 
+    margin-bottom: 0.25em;
+    margin-left: 0.5em;
     text-align: center;
 }
 
-.container .content p {
-    width: 80%;
-    margin: 1em auto;
+.play-area {
+    background: PaleTurquoise;
+    grid-area: play-area;
+    border-radius: 0.5em;
+    margin-bottom: 0.25em;
+    margin-right: 0.5em;
 }
-
-.container .content .spel-controls {
-    width: 20%;
-    margin: 1em auto;
-    height: 2em;
+.active-game {
+    background: SeaGreen;
+    grid-area: active;
+    border-radius: 0.5em;
+    margin-left: 0.5em;
+    text-align: center;
 }
-
-.container .content .spel-controls button {
-    display: block;
-    width: 45%;
-    margin-left: 2.5%;
-    float: left;
-}
-
-.container .content .spel {
-    width: 100%;
-    display: block;
-}
-
-.container .content .spel canvas {
-    display: block;
-    border: 1px solid black;
-    margin: 1em auto;
-}
-
 .score {
-    width: 420px;
-    margin: 10px auto;
+    background: YellowGreen;
+    grid-area: score;
+    border-radius: 0.5em;
+    margin-right: 0.5em;
     text-align: center;
 }
-
-@media (max-width:1280px)  {
-    /*** Nvaigatie ***/
-    .container .menu {
-        width: 35%;
-    }
-    /*** Hoofdstructuur ***/
-    .container .content {
-        width: 65%;
-    }
-    .container .content .spel-controls {
-        width: 35%;
-    }
+.slider {
+  -webkit-appearance: none;
+  width: 20%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
-@media (max-width:640px)  {
-    /*** Generiek ***/
-    .container .menu, .container .content, .container .content .spel canvas {
-        width: 100%;
-    }
-
-    /*** Nvaigatie ***/
-    .container .menu {
-        display: none;
-    }
-    
-    .menu-popup {
-        display: block;
-        width: 100%;
-        margin: .5em auto 0 auto;
-    }
-
-    #show-menu {
-        float: right;
-    }
-
-    #show-menu.clicked {
-        background-color: red;
-    }
-
-    /*** Hoofdstructuur ***/
-    .container .content .spel-controls {
-        width: 50%;
-    }
-    .container .menu, .container .content {
-        padding: 1em 0;
-        margin: .5em 0;
-    }
+.slider:hover {
+  opacity: 1;
 }
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+/*** Navigatie ***/
+.navul {
+    list-style-type: none;
+    margin-right: 1em;
+    font-size: 1em;
+}
+    /*** Navigatie buttons ***/
+/*** Als er ander element wordt toegevoegd buiten de navul klasse moet deze opmaak gespecificeerd worden als bv .navul.li ***/
+    li {
+       border: thin solid Ivory; 
+       border-radius: 0.5em;
+       margin: 1em;
+    }
+    a {
+      text-decoration: none;
+      color: initial;
+    }
+    a:visited {
+        color: blue;
+    }
+
+    li:hover {
+        background: Coral;
+    }
