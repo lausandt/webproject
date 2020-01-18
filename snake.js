@@ -3,10 +3,8 @@
 const 
     R = 10,                     // straal van een element
     STEP = 2 * R,               // stapgrootte
-    WIDTH = 360,                // breedte veld
-    HEIGHT = 360,               // hoogte veld
                                 // er moet gelden: WIDTH = HEIGHT
-    MAX = WIDTH / STEP - 1,     // netto veldbreedte
+    
     LEFT = "left",              // bewegingsrichtingen
     RIGHT = "right",
     UP = "up",
@@ -16,8 +14,7 @@ const
 
     XMIN = R,                   // minimale x waarde
     YMIN = R,                   // minimale y waarde
-    XMAX = WIDTH - R,           // maximale x waarde
-    YMAX = HEIGHT - R,          // maximale y waarde
+
 
     SNAKE = "DarkRed",          // kleur van een slangsegment
     FOOD = "Olive",             // kleur van voedsel
@@ -25,6 +22,7 @@ const
 
 var snake,
     id,
+    points = 0,
     foods = [];                 // voedsel voor de slang
 
 
@@ -204,6 +202,7 @@ function doMove(snake, direction) {
             }
         else {
             eat(newHead.x, newHead.y);
+            updatePoints();
             if (foods.length === 0) { 
                 alert("WINNER"); 
                 clearInterval(id);
@@ -264,7 +263,12 @@ function moveTo(head, direction) {
  */
 function eat(x,y) {
     foods = foods.filter(food => !(food.x === x && food.y === y));
-}    
+}   
+
+function updatePoints(){
+    points = points + 1000;
+    $(".score").html(points);
+}
 
 /**
  * @function createStartSnake
