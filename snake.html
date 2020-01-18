@@ -1,62 +1,46 @@
 <!DOCTYPE html>
 <html lang="nl">
-    <head>
-        <title>Mijn spelletjessite</title>
-        <link rel="stylesheet" href="stijl.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>Mijn spelletjessite</h1>
-            </div>
-            <div class="menu-popup">
-                <button id="show-menu">Menu</button>
-            </div>
-            <div class="menu">
-                <h2>Mijn spelletjes</h2>
-                <ul>
-                    <li><a href="index.html">Welkom</a></li>
-                    <li><a href="#">Inloggen</a></li>
-                    <li><a href="snake.html" class="active">Snake</a></li>
-                    <li><a href="#">Boter-kaas-eieren</a></li>
-                    <li><a href="#">Sudoku</a></li>
-                    <li><a href="#">Master mind</a></li>
-                    <li><a href="#">Galgje</a></li>
-                    <li><a href="#">Cryptogramm</a></li>
-                </ul>
+	<head>
+		<title>Mijn spelletjessite/snake</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="stijl.css">
+        <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="js/jcanvas.min.js"></script>
+        <script src="js/snake.js"></script>
+	</head>
+	<body>
+      <div class="container">
+            <div class="header"><h1 class="pagetitle">SALON DES JEUX</h1></div>
+            <div class="menu"><h1>menu</h1>
+                <nav>
+                    <ul class="navul">
+                        <li><a href="index.html">Welkom</a></li>
+                        <li><a href= "../">Inloggen</a></li>
+                        <li><a href= "snake.html">Snake</a></li>
+                        <li><a href= "../">Boter-kaas-eieren</a></li>
+                        <li><a href= "../">Sudoku</a></li>
+                        <li><a href= "../">Mastermind</a></li>
+                        <li><a href= "../">Galgje</a></li>
+                        <li><a href= "../">Crypogram</a></li>
+                    </ul>
+                </nav>
             </div>
             <div class="content">
                 <h2>Snake</h2>
-                <div class="score">
-                    <label for="name">Speler:  </label>
-                    <input type="text" placeholder="Naam" id="name" name="name" />
-                    <p>Gespeeld: <span id="gamesPlayed">0</span></p>
-                    <p>Gewonnen: <span id="gamesWon">0</span></p>
-                    <p>Verloren: <span id="gamesLost">0</span></p>
-                </div>
                 <div class="spel-controls">
                     <button id="startSnake">Start</button>
                     <button id="stopSnake">Stop</button>
                 </div>
-                <div class="spel-controls">
-                    <button id="saveGame">Save <i class="far fa-save"></i></button>
-                    <button id="loadGame">Load <i class="fas fa-download"></i></button>
+                <div class="slidecontainer">
+                    <p>set snake's speed</p>
+                    <input type="range" min="100" max="900" value="500" class="slider" id="myRange">
                 </div>
                 <div class="spel">
                     <canvas id="mySnakeCanvas" width="360" height="360"></canvas>     
                 </div>
             </div>
+            <div class="active-game"><p class="rounded">SNAKE</p></div>
+            <div class="score"><p class="rounded">score: 000000</p></div>
         </div>
-
-        <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-        <script src="js/chai.js"></script>
-        <script src="js/mocha.js"></script>
-        <script src="js/jcanvas.min.js"></script>
-        <script src="js/snake.js"></script>
-        <script src="js/page.js"></script>
-    </body>
+	</body>
 </html>
