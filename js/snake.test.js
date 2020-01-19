@@ -1,138 +1,138 @@
 "use strict";
-describe("#init()", function() {
-  context("Zonder input", function() {
-    it("Maakt nieuwe slang van 2 segmenten", function() {
+describe("#init()", ()=> {
+  context("Zonder input", ()=> {
+    it("Maakt nieuwe slang van 2 segmenten", ()=> {
       init();
       expect(snake.segments.length).to.equal(2);
     });
-    it("Vijf stuks voedsel aangemaakt", function() {
+    it("Vijf stuks voedsel aangemaakt", ()=> {
       init();
       expect(foods.length).to.equal(5);
     });
   });
 });
 
-describe("#stop()", function() {
-  context("Zonder input", function() {
-    it("Haalt slang weg", function() {
+describe("#stop()", ()=> {
+  context("Zonder input", ()=> {
+    it("Haalt slang weg", ()=> {
       stop();
       expect(snake).to.equal(null);
     });
-    it("Al het voedsel weggehaald", function() {
+    it("Al het voedsel weggehaald", ()=> {
       stop();
       expect(foods.length).to.equal(0);
     });
   });
 });
 
-describe ("#canMove()", function() {
-  context("Slang is net aangemaakt, staat midden in speelveld", function() {
-    it("Beweeg omhoog (direction UP)", function() {
+describe ("#canMove()", ()=> {
+  context("Slang is net aangemaakt, staat midden in speelveld", ()=> {
+    it("Beweeg omhoog (direction UP)", ()=> {
       init();
-      expect(snake.canMove(UP)).to.equal(true);
+      expect(canMove(snake, UP)===true);
     });
-    it("Beweeg omlaag (direction DOWN)", function() {
+    it("Beweeg omlaag (direction DOWN)", ()=> {
       init();
-      expect(snake.canMove(DOWN)).to.equal(true);
+      expect(canMove(snake, DOWN)===true);
     });
-    it("Beweeg naar rechts (direction RIGHT)", function() {
+    it("Beweeg naar rechts (direction RIGHT)", ()=> {
       init();
-      expect(snake.canMove(RIGHT)).to.equal(true);
+      expect(canMove(snake, RIGHT)===true);
     });
-    it("Beweeg naar links (direction LEFT)", function() {
+    it("Beweeg naar links (direction LEFT)", ()=> {
       init();
-      expect(snake.canMove(LEFT)).to.equal(true);
+      expect(canMove(snake, LEFT) === true);
     });
   });
 
-  context("Slang staat op grens", function() {
-    it("Slang op linkergens; kan niet naar links (direction LEFT), wel andere richtingen", function() {
+  context("Slang staat op grens", () => {
+    it("Slang op linkergens; kan niet naar links (direction LEFT), wel andere richtingen", ()=> {
       init();
       // Zet hoofd van slang op XMIN
-      snake.head().x = XMIN;
-      expect(snake.canMove(RIGHT)).to.equal(true);
-      expect(snake.canMove(LEFT)).to.equal(false);
-      expect(snake.canMove(UP)).to.equal(true);
-      expect(snake.canMove(DOWN)).to.equal(true);
+      head(snake).x = XMIN;
+      expect(canMove(snake, RIGHT) === true);
+      expect(canMove(snake, LEFT) === false);
+      expect(canMove(snake, UP) === true);
+      expect(canMove(snake, DOWN) === true);
     });
-    it("Slang op rechterrens; kan niet naar rechts (direction RIGHT), wel andere richtingen", function() {
+    it("Slang op rechterrens; kan niet naar rechts (direction RIGHT), wel andere richtingen", ()=> {
       init();
       // Zet hoofd van slang op XMAX
-      snake.head().x = XMAX;
-      expect(snake.canMove(RIGHT)).to.equal(false);
-      expect(snake.canMove(LEFT)).to.equal(true);
-      expect(snake.canMove(UP)).to.equal(true);
-      expect(snake.canMove(DOWN)).to.equal(true);
+      head(snake).x = XMAX;
+      expect(canMove(snake, RIGHT)===false);
+      expect(canMove(snake, LEFT)===true);
+      expect(canMove(snake, UP)===true);
+      expect(canMove(snake, DOWN)===true);
     });
-    it("Slang op bovengrens; kan niet naar boven (direction UP), wel andere richtingen", function() {
+    it("Slang op bovengrens; kan niet naar boven (direction UP), wel andere richtingen", ()=> {
       init();
       // Zet hoofd van slang op YMIN
-      snake.head().y = YMIN;
-      expect(snake.canMove(RIGHT)).to.equal(true);
-      expect(snake.canMove(LEFT)).to.equal(true);
-      expect(snake.canMove(UP)).to.equal(false);
-      expect(snake.canMove(DOWN)).to.equal(true);
+      head(snake).y = YMIN;
+      expect(canMove(snake, RIGHT)===true);
+      expect(canMove(snake, LEFT)===true);
+      expect(canMove(snake, UP)===false);
+      expect(canMove(snake, DOWN)===true);
     });
-    it("Slang op benedengrens; kan niet naar beneden (direction DOWN), wel andere richtingen", function() {
+    it("Slang op benedengrens; kan niet naar beneden (direction DOWN), wel andere richtingen", ()=> {
       init();
       // Zet hoofd van slang op YMAX
-      snake.head().y = YMAX;
-      expect(snake.canMove(RIGHT)).to.equal(true);
-      expect(snake.canMove(LEFT)).to.equal(true);
-      expect(snake.canMove(UP)).to.equal(true);
-      expect(snake.canMove(DOWN)).to.equal(false);
+      head(snake).y = YMAX;
+      expect(canMove(snake, RIGHT)===true);
+      expect(canMove(snake, LEFT)===true);
+      expect(canMove(snake, UP)===true);
+      expect(canMove(snake, DOWN)===false);
     });
   });
 });
 
-describe("#move()", function() {
-  context("Slang is net aangemaakt, staat midden in speelveld", function() {
-    it("Slang beweegt stap naar rechts", function() {
+describe("#move()", ()=> {
+  context("Slang is net aangemaakt, staat midden in speelveld", ()=> {
+    it("Slang beweegt stap naar rechts", ()=> {
       init();
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(RIGHT);
       // Wel naar rechts
-      expect(snake.head().x).to.equal(currentX + STEP);
+      expect(head(snake).x === currentX + STEP);
       // Niet omhoog of omlaag
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).y === currentY);
     });
-    it("Slang beweegt stap naar links", function() {
+    it("Slang beweegt stap naar links", ()=> {
       init();
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(LEFT);
       // Wel naar links
-      expect(snake.head().x).to.equal(currentX - STEP);
+      expect(head(snake).x === currentX - STEP);
       // Niet omhoog of omlaag
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).y === currentY);
     });
-    it("Slang beweegt stap naar beneden", function() {
+    it("Slang beweegt stap naar beneden", ()=> {
       init();
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(RIGHT);
       move(DOWN);
       // Niet naar links of rechts
-      expect(snake.head().x).to.equal(currentX + STEP);
+      expect(head(snake).x === currentX + STEP);
       // Wel omlaag
-      expect(snake.head().y).to.equal(currentY + STEP);
+      expect(head(snake).y === currentY + STEP);
     });
-    it("Slang beweegt stap omhoog", function() {
+    it("Slang beweegt stap omhoog", ()=> {
       init();
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(UP);
       // Niet naar links of rechts
-      expect(snake.head().x).to.equal(currentX);
+      expect(head(snake).x===currentX);
       // Wel omhoog
-      expect(snake.head().y).to.equal(currentY - STEP);
+      expect(head(snake).y===currentY - STEP);
     });
-    it("Slang staat naast voedselstukje, eet deze op en wordt één segment langer", function() {
+    it("Slang staat naast voedselstukje, eet deze op en wordt één segment langer", ()=> {
       init();
       var currentSnakeLength = snake.segments.length;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       var food = foods[0];
       // Voorkomen dat we proberen een extra voedselstukje op die locatie te plaatsen als er al één staat.
       // Als die er staat pakken we dat voedselstukje; anders pakken we het eerste voedselstukje en plaatsen die op de juiste plek.
@@ -143,10 +143,10 @@ describe("#move()", function() {
         food.y = currentY;
       }
       move(RIGHT);
-      expect(snake.segments.length).to.equal(currentSnakeLength + 1);
-      expect(foods.length).to.equal(NUMFOODS - 1);
+      expect(snake.segments.length===currentSnakeLength + 1);
+      expect(foods.length===NUMFOODS - 1);
     });
-    it("Slang eet alle voedselstukjes op, wordt totaal aantal voedselstukjes langer, voedsel is op", function() {
+    it("Slang eet alle voedselstukjes op, wordt totaal aantal voedselstukjes langer, voedsel is op", ()=> {
       init();
       var currentSnakeLength = snake.segments.length;
       // Plaats eerst slang helemaal linksboven om te voorkomen dat we over "onszelf" heen lopen
@@ -158,176 +158,175 @@ describe("#move()", function() {
       });
 
       foods.forEach(food => {
-        food.x = snake.head().x + STEP;
-        food.y = snake.head().y;
+        food.x = head(snake).x + STEP;
+        food.y = head(snake).y;
         move(RIGHT);
       });
-      expect(foods.length).to.equal(0);
-      expect(snake.segments.length).to.equal(currentSnakeLength + NUMFOODS);
+      expect(foods.length===0);
+      expect(snake.segments.length===currentSnakeLength + NUMFOODS);
     });
   });
 
-  context("Slang staat op linkerrand", function() {
-    it("Beweegt naar links, maar kan niet", function() {
+  context("Slang staat op linkerrand", ()=> {
+    it("Beweegt naar links, maar kan niet", ()=> {
       init();
-      snake.head().x = XMIN;
-      var currentX = snake.head().x;
+      head(snake).x = XMIN;
+      var currentX = head(snake).x;
       move(LEFT);
-      expect(snake.head().x).to.equal(currentX);
+      expect(head(snake).x===currentX);
     });
-    it("Beweegt naar rechts", function() {
+    it("Beweegt naar rechts", ()=> {
       init();
-      snake.head().x = XMIN;
-      var currentX = snake.head().x;
+      head(snake).x = XMIN;
+      var currentX = head(snake).x;
       move(RIGHT);
-      expect(snake.head().x).to.equal(currentX + STEP);
+      expect(head(snake).x===currentX + STEP);
     });
-    it("Beweegt naar boven", function() {
+    it("Beweegt naar boven", ()=> {
       init();
-      snake.head().x = XMIN;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).x = XMIN;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(UP);
-      expect(snake.head().x).to.equal(currentX);
-      expect(snake.head().y).to.equal(currentY - STEP);
+      expect(head(snake).x===currentX);
+      expect(head(snake).y===currentY - STEP);
     });
-    it("Beweegt naar beneden", function() {
+    it("Beweegt naar beneden", ()=> {
       init();
-      snake.head().x = XMIN;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).x = XMIN;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(DOWN);
-      expect(snake.head().x).to.equal(currentX);
-      expect(snake.head().y).to.equal(currentY + STEP);
+      expect(head(snake).x===currentX);
+      expect(head(snake).y===currentY + STEP);
     });
   });
 
-  context("Slang staat op rechterrand", function() {
-    it("Beweegt naar rechts, maar kan niet", function() {
+  context("Slang staat op rechterrand", ()=> {
+    it("Beweegt naar rechts, maar kan niet", ()=> {
       init();
-      snake.head().x = XMAX;
-      var currentX = snake.head().x;
+      head(snake).x = XMAX;
+      var currentX = head(snake).x;
       move(RIGHT);
-      expect(snake.head().x).to.equal(currentX);
+      expect(head(snake).x===currentX);
     });
-    it("Beweegt naar links", function() {
+    it("Beweegt naar links", ()=> {
       init();
-      snake.head().x = XMAX;
-      var currentX = snake.head().x;
+      head(snake).x = XMAX;
+      var currentX = head(snake).x;
       move(LEFT);
-      expect(snake.head().x).to.equal(currentX - STEP);
+      expect(head(snake).x===currentX - STEP);
     });
-    it("Beweegt naar boven", function() {
+    it("Beweegt naar boven", ()=> {
       init();
-      snake.head().x = XMAX;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).x = XMAX;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(UP);
-      expect(snake.head().x).to.equal(currentX);
-      expect(snake.head().y).to.equal(currentY - STEP);
+      expect(head(snake).x===currentX);
+      expect(head(snake).y===currentY - STEP);
     });
-    it("Beweegt naar beneden", function() {
+    it("Beweegt naar beneden", ()=> {
       init();
-      snake.head().x = XMAX;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).x = XMAX;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(DOWN);
-      expect(snake.head().x).to.equal(currentX);
-      expect(snake.head().y).to.equal(currentY + STEP);
+      expect(head(snake).x===currentX);
+      expect(head(snake).y===currentY + STEP);
     });
   });
 
-  context("Slang staat op bovenrand", function() {
-    it("Beweegt naar boven, maar kan niet", function() {
+  context("Slang staat op bovenrand", ()=> {
+    it("Beweegt naar boven, maar kan niet", ()=> {
       init();
-      snake.head().y = YMIN;
-      var currentY = snake.head().y;
+      head(snake).y = YMIN;
+      var currentY = head(snake).y;
       move(UP);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).y===currentY);
     });
-    it("Beweegt naar beneden", function() {
+    it("Beweegt naar beneden", ()=> {
       init();
-      snake.head().y = YMIN;
-      var currentY = snake.head().y;
+      head(snake).y = YMIN;
+      var currentY = head(snake).y;
       move(DOWN);
-      expect(snake.head().y).to.equal(currentY + STEP);
+      expect(head(snake).y===currentY + STEP);
     });
-    it("Beweegt naar links", function() {
+    it("Beweegt naar links", ()=> {
       init();
-      snake.head().y = YMIN;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).y = YMIN;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(LEFT);
-      expect(snake.head().x).to.equal(currentX - STEP);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).x===currentX - STEP);
+      expect(head(snake).y===currentY);
     });
-    it("Beweegt naar rechts", function() {
+    it("Beweegt naar rechts", ()=> {
       init();
-      snake.head().y = YMIN;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).y = YMIN;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(RIGHT);
-      expect(snake.head().x).to.equal(currentX + STEP);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).x===currentX + STEP);
+      expect(head(snake).y===currentY);
     })
   });
 
-  context("Slang staat op onderrand", function() {
-    it("Beweegt naar beneden, maar kan niet", function() {
+  context("Slang staat op onderrand", ()=> {
+    it("Beweegt naar beneden, maar kan niet", ()=> {
       init();
-      snake.head().y = YMAX;
-      var currentY = snake.head().y;
+      head(snake).y = YMAX;
+      var currentY = head(snake).y;
       move(DOWN);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).y===currentY);
     });
-    it("Beweegt naar boven", function() {
+    it("Beweegt naar boven", ()=> {
       init();
-      snake.head().y = YMAX;
-      var currentY = snake.head().y;
+      head(snake).y = YMAX;
+      var currentY = head(snake).y;
       move(UP);
-      expect(snake.head().y).to.equal(currentY - STEP);
+      expect(head(snake).y===currentY - STEP);
     });
-    it("Beweegt naar links", function() {
+    it("Beweegt naar links", ()=> {
       init();
-      snake.head().y = YMAX;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).y = YMAX;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(LEFT);
-      expect(snake.head().x).to.equal(currentX - STEP);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).x===currentX - STEP);
+      expect(head(snake).y===currentY);
     });
-    it("Beweegt naar rechts", function() {
+    it("Beweegt naar rechts", ()=> {
       init();
-      snake.head().y = YMAX;
-      var currentX = snake.head().x;
-      var currentY = snake.head().y;
+      head(snake).y = YMAX;
+      var currentX = head(snake).x;
+      var currentY = head(snake).y;
       move(RIGHT);
-      expect(snake.head().x).to.equal(currentX + STEP);
-      expect(snake.head().y).to.equal(currentY);
+      expect(head(snake).x===currentX + STEP);
+      expect(head(snake).y===currentY);
     });
   });
 });
 
-describe("#Element.prototype.collidesWithOneOf(elements)", function() {
-  context("Slang is net aangemaakt, staat midden in speelveld", function() {
-    it("Slang heeft geen collision met voedselelementen", function() {
+describe("#collidesWithOneOf(snake, elements)", ()=> {
+  context("Slang is net aangemaakt, staat midden in speelveld", ()=> {
+    it("Slang heeft geen collision met voedselelementen", ()=> {
       init();
-      foods.forEach(food => expect(food.collidesWithOneOf(snake.segments)).to.equal(false));
+      foods.forEach(food => expect(collidesWithOneOf(food, snake.segments) === false));
     });
-    it("Voedselelementen hebben geen collisions onderling", function() {
+    it("Voedselelementen hebben geen collisions onderling", ()=> {
       init();
       while(foods.length > 0) {
-        var poppedFood = foods.pop();
-        expect(poppedFood.collidesWithOneOf(foods)).to.equal(false);
+        expect(collidesWithOneOf(foods.pop(), foods) === false);
       }
     });
-    it("Slang raakt zichzelf, één loss meer dan hiervoor", function() {
+    it("Slang raakt zichzelf, één loss meer dan hiervoor", ()=> { // hoort deze test hier thuis?
       init();
       var currentLosses = game.losses;
       move(DOWN);
       expect(game.losses).to.equal(currentLosses + 1);
     });
-    it("Slang raakt zichzelf niet, game gaat door", function() {
+    it("Slang raakt zichzelf niet, game gaat door", ()=> {
       init();
       var currentLosses = game.losses;
       move(RIGHT);
@@ -338,26 +337,26 @@ describe("#Element.prototype.collidesWithOneOf(elements)", function() {
   });
 });
 
-describe("#eat()", function() {
-  context("Spel is net geïnitaliseerd, vijftien stuks voedsel beschikbaar", function() {
-    it("Voedsel wordt gegeten, voedsel niet langer beschikbaar", function() {
+describe("#eat()", ()=> {
+  context("Spel is net geïnitaliseerd, vijftien stuks voedsel beschikbaar", ()=> {
+    it("Voedsel wordt gegeten, voedsel niet langer beschikbaar", ()=> {
       init();
       var foodToEat = foods[0];
       eat(foodToEat.x, foodToEat.y);
       expect(foods.filter(food => food.x === foodToEat.x && food.y === foodToEat.y).length).to.equal(0);
     });
-    it("Voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 14", function() {
+    it("Voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 14", ()=> {
       init();
       var foodToEat = foods[0];
       eat(foodToEat.x, foodToEat.y);
-      expect(foods.length).to.equal(NUMFOODS-1);
+      expect(foods.length === NUMFOODS-1);
     });
-    it("Alle voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 0", function() {
+    it("Alle voedsel wordt gegeten, aantal voedselstukken is verlaagd naar 0", ()=> {
       init();
       foods.forEach(food => eat(food.x, food.y));
-      expect(foods.length).to.equal(0);
+      expect(foods.length === 0);
     });
-    it("Alle voedselstukjes zijn opgegeten, game heeft één win verkregen", function() {
+    it("Alle voedselstukjes zijn opgegeten, game heeft één win verkregen", ()=> {
       init();
       var currentWins = game.wins;
       var currentLosses = game.losses;
@@ -371,8 +370,8 @@ describe("#eat()", function() {
       });
 
       foods.forEach(food => {
-        food.x = snake.head().x + STEP;
-        food.y = snake.head().y;
+        food.x = head(snake).x + STEP;
+        food.y = head(snake).y;
         move(RIGHT);
       });
 
@@ -383,9 +382,9 @@ describe("#eat()", function() {
   });
 });
 
-describe("#Game.protoytype.win()", function() {
-  context("Spel is net geïnitialiseerd, game is nog leeg.", function() {
-    it("Game wordt gewonnen, aantal wins gaat met één omhoog", function() {
+describe("#Game.protoytype.win()", ()=> {
+  context("Spel is net geïnitialiseerd, game is nog leeg.", ()=> {
+    it("Game wordt gewonnen, aantal wins gaat met één omhoog", ()=> {
       var currentWins = game.wins;
       var currentLosses = game.losses;
       var currentPlays = game.plays;
@@ -399,9 +398,9 @@ describe("#Game.protoytype.win()", function() {
     });
   });
 });
-describe("#Game.prototype.lose()", function() {
-  context("Spel is net geïnitaliseerd, game is nog leeg", function() {
-   it("Game wordt verloren, aantal losses gaat met één omhoog", function() {
+describe("#Game.prototype.lose()", ()=> {
+  context("Spel is net geïnitaliseerd, game is nog leeg", ()=> {
+   it("Game wordt verloren, aantal losses gaat met één omhoog", ()=> {
       var currentLosses = game.losses;
       var currentPlays = game.plays;
       var currentWins = game.wins;
@@ -414,9 +413,9 @@ describe("#Game.prototype.lose()", function() {
   });
 });
 
-describe("#Game.prototype.save() & #Game.prototype.load()", function() {
-  context("Spel is al een tijdje bezig, er zijn wat wins, losses en plays genoteerd.", function() {
-    it("Game wordt opgeslagen, game wordt opnieuw geïnitaliseerd en daarna geladen. Gamestatus moet gelijk zijn aan voor het opslaan.", function() {
+describe("#Game.prototype.save() & #Game.prototype.load()", ()=> {
+  context("Spel is al een tijdje bezig, er zijn wat wins, losses en plays genoteerd.", ()=> {
+    it("Game wordt opgeslagen, game wordt opnieuw geïnitaliseerd en daarna geladen. Gamestatus moet gelijk zijn aan voor het opslaan.", ()=> {
       var name = "Speler1";
       var startWins = 5;
       var startLosses = 5;

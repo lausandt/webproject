@@ -29,6 +29,8 @@ const
     PASSWORD = "password";      // Wachtwoord voor onze "server"
 
 var snake,
+    id,
+    points = 0,
     foods = [];                 // voedsel voor de slang
 
 var game = new Game();          // Bijhouden welke game dit is en wat de score is.
@@ -36,6 +38,7 @@ var game = new Game();          // Bijhouden welke game dit is en wat de score i
 $(document).ready(function() {
     $("#startSnake").click(init);
     $("#stopSnake").click(stop);
+    $(document).keydown(arrowKeyMove);
     $("#saveGame").click(function() {
         game.save();
     });
@@ -68,18 +71,44 @@ function init() {
 function stop() {
     snake = null;
     foods = [];
+    points = 0;
+    updatePoints();
     $("#mySnakeCanvas").clearCanvas();
 }
-
+/**
+ * @function arrowKeyMove
+ * @desc an eventhandler that makes a move if one of the arrow keys is pressed
+ * @param { event } event a keyboardEvent
+ */
+ function arrowKeyMove(event) { 
+    clearInterval(id); // is getest en noodzakelijk 
+    switch(event.key) {
+        case "ArrowLeft": // left
+            id = setInterval(move, $("#myRange").val(), snake, LEFT);
+            break;
+        case "ArrowUp": // up
+            id = setInterval(move, $("#myRange").val(), snake, UP);
+            break;
+        case "ArrowRight": // right
+            id = setInterval(move, $("#myRange").val(), snake, RIGHT);
+            break;
+        case "ArrowDown": // down
+            id = setInterval(move, $("#myRange").val(), snake, DOWN);
+            break;
+        default: return; // exit this handler for other keys
+    }
+    event.preventDefault(); // prevent the default action (scroll / move caret)
+ }
 /**
  * @function move
  * @desc Beweeg slang in aangegeven richting tenzij slang uit canvas zou verdwijnen
  *
+ * @param {Element[]} snake de slang
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
  */
-function move(direction) {
-    if (snake.canMove(direction)) {
-        snake.doMove(direction);
+function move(snake, direction) {
+    if (canMove(snake, direction)) {
+        doMove(snake, direction);
         draw();
     } else {
         console.log("snake cannot move " + direction);
@@ -137,48 +166,46 @@ function Element(radius, x, y, color) {
     this.y = y;
     this.color = color;
 }
-/***************************************************************************
- **                 Methoden                                              **
- ***************************************************************************/
+
 /**
- * @method collidesWithOneOf
+ * @function collidesWithOneOf
  * @desc controleert of één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie wordt aangeroepen.
  *
+ * @param {Element} el een element
  * @param {Element[]} elements een Array van elementen objecten
  *
- * @return {boolean} false if there are no collisions, true otherwise
+ * @return {boolean} false if there are no collisions, true otherwise 
  *
  */
-Element.prototype.collidesWithOneOf = function (elements) {
-    return elements.map(element => this.x === element.x && this.y === element.y).some(bool => bool===true);
-};
+function collidesWithOneOf(el, elements) { return elements.map(element => el.x === element.x && el.y === element.y).some(bool => bool===true); }
 
 /** 
- * @method canMove
+ * @function canMove
  * @desc methode van Snake geeft aan of deze (head) in de aangegeven richting kan bewegen
  *
+ * @param {Element[]} snake de slang
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
  *
  * @return {boolean} true if the head of snake can move, false otherwise  
  */
 
-Snake.prototype.canMove = function(direction) {
+function canMove(snake, direction) {
+    
     switch(direction) {
         case UP:
-          return this.head().y >= YMIN + STEP;
+          return head(snake).y >= YMIN + STEP; 
         case DOWN:
-          return this.head().y <= YMAX - STEP;
+          return head(snake).y <= ($("#mySnakeCanvas").height() - R) - STEP;
         case LEFT:
-          return this.head().x >= XMIN + STEP;
+          return head(snake).x >= XMIN + STEP;
         case RIGHT:
-          return this.head().x <= XMAX - STEP;
+          return head(snake).x <= ($("#mySnakeCanvas").width() - R) - STEP;
         default:
-            return false;
+            return false;        
     };
 }
-
 /**
- * @method doMove
+ * @function doMove
  * @desc methode van Snake, beweegt de slang over het veld en eet het food volgens het onderstaande algoritme:
  * 
  * - 1: creëer een nieuwe head -> moveTo 
@@ -188,45 +215,53 @@ Snake.prototype.canMove = function(direction) {
  * - 4: voeg de nieuwe head toe -> push
  * - 5: creëer een nieuw snake object -> Snake
  *
+ * @param {Element[]} snake de slang
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
  */
-Snake.prototype.doMove = function(direction) {
-    var newHead = moveTo(this.head(), direction);
-    if(newHead.collidesWithOneOf(this.body())) {
-        // Verlies game
-        game.lose();
-    } else {
-        if (!(newHead.collidesWithOneOf(foods))) {
-            this.segments.shift();
+function doMove(snake, direction) {
+    var newHead = moveTo(head(snake), direction);
+    if (collidesWithOneOf(newHead, snake.segments)) { 
+        alert("LOOSER");
+        //we probably want to call some function here
+        clearInterval(id);
         }
+    else { 
+        if (!(collidesWithOneOf(newHead, foods))) { 
+            snake.segments = snake.segments.slice(1,snake.segments.length); // instead of shift use slice which returns a new array 
+            }
         else {
             eat(newHead.x, newHead.y);
-            // Win game
-            if(foods.length == 0) {
-                game.win();
+            points = points + 1000;
+            updatePoints();
+            if (foods.length === 0) { 
+                alert("WINNER"); 
+                clearInterval(id);
+                }
             }
-        }
-        this.head().color=SNAKE;
-        this.segments.push(newHead);
-        snake = new Snake(this.segments);
-        draw();
     }
-}
+    head(snake).color=SNAKE;
+    snake.segments = snake.segments.concat(newHead);  // use concat
+    snake = new Snake(snake.segments);
+    
+}  
 /**
- * @method head
+ * @function updatePoints
+ * @desc updates the points won in the game
+ */
+function updatePoints(){
+    $(".score").html(points);
+}
+
+
+/**
+ * @function head
  * @desc methode om het head segment op te vragen van Snake
  *
+ * @param {Element[]} snake een collectie van elementen
  * @return {Element} het head segment
  */
- Snake.prototype.head = function () { return this.segments[this.segments.length-1]; }
+ function head(snake) { return snake.segments[snake.segments.length-1]; }
 
- /**
-  * @method body
-  * @desc methode om alle body-segmenten (exclusief head) op te vragen van Snake
-  * 
-  * @return {Element[]} alle body segmenten (exclusief head)
-  */
- Snake.prototype.body = function() { return this.segments.slice(0, this.segments.length-1); }
 
  /**
   * @method lose
@@ -374,9 +409,8 @@ function eat(x,y) {
  * @desc Slang creëren, bestaande uit twee segmenten in het midden van het veld
  */
 function createStartSnake() {
-    var segments   = [createSegment(R + WIDTH/2, R + WIDTH/2), 
-                   createSegment(R + WIDTH/2, WIDTH/2 - R)];
-    snake = new Snake(segments);
+    snake = new Snake([createSegment(R + $("#mySnakeCanvas").width()/2, R + $("#mySnakeCanvas").width()/2), 
+                   createSegment(R + $("#mySnakeCanvas").width()/2, $("#mySnakeCanvas").width()/2 - R)]);
 }
 
 /**
@@ -442,8 +476,8 @@ function createFoods() {
     i = 0;
     //we gebruiken een while omdat we, om een arraymethode te gebruiken, eerst een nieuw array zouden moeten creëren (met NUMFOODS elementen)
     while (i < NUMFOODS) {
-        food = createFood(XMIN + getRandomInt(0, MAX) * STEP, YMIN + getRandomInt(0, MAX) * STEP);
-        if (!food.collidesWithOneOf(snake.segments) && !food.collidesWithOneOf(foods)) {
+        food = createFood(XMIN + getRandomInt(0, ($("#mySnakeCanvas").width()/ STEP-1)) * STEP, YMIN + getRandomInt(0, ($("#mySnakeCanvas").width()/ STEP-1)) * STEP); //MAX = WIDTH / STEP - 1
+        if (!collidesWithOneOf(food, snake.segments) && !collidesWithOneOf(food, foods)) {
             foods.push(food);
             i += 1;
         }
