@@ -16,6 +16,7 @@
 </head>
 
 <body>
+  <canvas id="mySnakeCanvas" width="360" height="360" style="display: none;"></canvas>
   <div id="mocha"></div>
   
   <script>
@@ -26,10 +27,8 @@
     mocha.setup('bdd');
   </script>
   
-  <!-- Import the sum function -->
+  <script src="js/properties.js"></script>
   <script src="js/snake.js"></script>
-  
-  <!-- Import the tests for the sum function -->
   <script src="js/snake.test.js"></script>
   
   <script>

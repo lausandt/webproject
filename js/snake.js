@@ -1,33 +1,5 @@
 "use strict";
 
-const 
-    R = 10,                     // straal van een element
-    STEP = 2 * R,               // stapgrootte
-    WIDTH = 360,                // breedte veld
-    HEIGHT = 360,               // hoogte veld
-                                // er moet gelden: WIDTH = HEIGHT
-    MAX = WIDTH / STEP - 1,     // netto veldbreedte
-    LEFT = "left",              // bewegingsrichtingen
-    RIGHT = "right",
-    UP = "up",
-    DOWN = "down",
-
-    NUMFOODS = 5,               // aantal voedselelementen
-
-    XMIN = R,                   // minimale x waarde
-    YMIN = R,                   // minimale y waarde
-    XMAX = WIDTH - R,           // maximale x waarde
-    YMAX = HEIGHT - R,          // maximale y waarde
-
-    SNAKE = "DarkRed",          // kleur van een slangsegment
-    FOOD = "Olive",             // kleur van voedsel
-    HEAD = "DarkOrange",        // kleur van de kop van de slang
-
-    SERVER_URL = "http://localhost/game/snake",
-    USE_SERVER = false,         // Maken we gebruik van de server (==true) of localstorage (==false) voor opslag van game?
-    USER = "user",              // Username voor onze "server"
-    PASSWORD = "password";      // Wachtwoord voor onze "server"
-
 var snake,
     id,
     points = 0,
@@ -35,18 +7,17 @@ var snake,
 
 var game = new Game();          // Bijhouden welke game dit is en wat de score is.
 
-$(document).ready(function() {
+$(document).ready(() => {
     $("#startSnake").click(init);
     $("#stopSnake").click(stop);
     $(document).keydown(arrowKeyMove);
-    $("#saveGame").click(function() {
+    $("#saveGame").click(() => {
         game.save();
     });
-    $("#loadGame").click(function() {
+    $("#loadGame").click(() => {
         game.load();
     });
 });
-
 
 /***************************************************************************
  **                 Commando's voor de gebruiker                          **
@@ -60,6 +31,7 @@ function init() {
     createStartSnake();
     createFoods();
     draw();
+    game.running = true;
     game.plays++;
     game.update();
 }
@@ -80,24 +52,27 @@ function stop() {
  * @desc an eventhandler that makes a move if one of the arrow keys is pressed
  * @param { event } event a keyboardEvent
  */
- function arrowKeyMove(event) { 
-    clearInterval(id); // is getest en noodzakelijk 
-    switch(event.key) {
-        case "ArrowLeft": // left
-            id = setInterval(move, $("#myRange").val(), snake, LEFT);
-            break;
-        case "ArrowUp": // up
-            id = setInterval(move, $("#myRange").val(), snake, UP);
-            break;
-        case "ArrowRight": // right
-            id = setInterval(move, $("#myRange").val(), snake, RIGHT);
-            break;
-        case "ArrowDown": // down
-            id = setInterval(move, $("#myRange").val(), snake, DOWN);
-            break;
-        default: return; // exit this handler for other keys
+ function arrowKeyMove(event) {
+    // Alleen daadwerkelijk uitvoeren indien het spel aanstaat (er is nog niet verloren of gewonnen)
+    if(game.running === true) {
+        clearInterval(id); // is getest en noodzakelijk 
+        switch(event.key) {
+            case "ArrowLeft": // left
+                id = setInterval(move, $("#myRange").val(), snake, LEFT);
+                break;
+            case "ArrowUp": // up
+                id = setInterval(move, $("#myRange").val(), snake, UP);
+                break;
+            case "ArrowRight": // right
+                id = setInterval(move, $("#myRange").val(), snake, RIGHT);
+                break;
+            case "ArrowDown": // down
+                id = setInterval(move, $("#myRange").val(), snake, DOWN);
+                break;
+            default: return; // exit this handler for other keys
+        }
+        event.preventDefault(); // prevent the default action (scroll / move caret)
     }
-    event.preventDefault(); // prevent the default action (scroll / move caret)
  }
 /**
  * @function move
@@ -138,6 +113,7 @@ function draw() {
     this.plays = 0;
     this.wins = 0;
     this.losses = 0;
+    this.running = false;
 }
 
 /**
@@ -179,7 +155,7 @@ function Element(radius, x, y, color) {
  */
 function collidesWithOneOf(el, elements) { return elements.map(element => el.x === element.x && el.y === element.y).some(bool => bool===true); }
 
-/** 
+/**
  * @function canMove
  * @desc methode van Snake geeft aan of deze (head) in de aangegeven richting kan bewegen
  *
@@ -190,18 +166,17 @@ function collidesWithOneOf(el, elements) { return elements.map(element => el.x =
  */
 
 function canMove(snake, direction) {
-    
     switch(direction) {
         case UP:
-          return head(snake).y >= YMIN + STEP; 
+          return head(snake).y >= PlayAreaLimits.minY + STEP;
         case DOWN:
-          return head(snake).y <= ($("#mySnakeCanvas").height() - R) - STEP;
+          return head(snake).y <= PlayAreaLimits.maxY - STEP;
         case LEFT:
-          return head(snake).x >= XMIN + STEP;
+          return head(snake).x >= PlayAreaLimits.minX + STEP;
         case RIGHT:
-          return head(snake).x <= ($("#mySnakeCanvas").width() - R) - STEP;
+          return head(snake).x <= PlayAreaLimits.maxX - STEP;
         default:
-            return false;        
+            return false;
     };
 }
 /**
@@ -221,28 +196,24 @@ function canMove(snake, direction) {
 function doMove(snake, direction) {
     var newHead = moveTo(head(snake), direction);
     if (collidesWithOneOf(newHead, snake.segments)) { 
-        alert("LOOSER");
-        //we probably want to call some function here
-        clearInterval(id);
-        }
+        game.lose();
+    }
     else { 
         if (!(collidesWithOneOf(newHead, foods))) { 
             snake.segments = snake.segments.slice(1,snake.segments.length); // instead of shift use slice which returns a new array 
-            }
+        }
         else {
             eat(newHead.x, newHead.y);
             points = points + 1000;
             updatePoints();
-            if (foods.length === 0) { 
-                alert("WINNER"); 
-                clearInterval(id);
-                }
+            if (foods.length === 0) {
+                game.win();
             }
+        }
     }
     head(snake).color=SNAKE;
     snake.segments = snake.segments.concat(newHead);  // use concat
-    snake = new Snake(snake.segments);
-    
+    snake = new Snake(snake.segments);    
 }  
 /**
  * @function updatePoints
@@ -267,55 +238,61 @@ function updatePoints(){
   * @method lose
   * @desc methode die kan worden uitgevoerd als aan de voorwaarden voor het verliezen van het spel wordt voldaan.
   */
- Game.prototype.lose = function() {
-    console.log("VERLOREN!!!");
+ Game.prototype.lose = () => {
     this.losses++;
     this.update();
     // Sla de spelstand ook op op de server
     this.save();
-    // TODO: Stop de slang hier! Bv. snake.stop();
+    this.stop("VERLOREN!!!");
  }
 
  /**
   * @method win
   * @desc methode die kan worden uitgevoerd als aan de voorwaarden voor het winnen van het spel wordt voldaan.
   */
- Game.prototype.win = function() {
-    console.log("GEWONNEN!!!");
+ Game.prototype.win = () => {
     this.wins++;
     this.update();
     // Sla de spelstand ook op op de server
     this.save();
-    // TODO: Stop de slang hier! Bv. snake.stop();
+    this.stop("GEWONNEN!!!");
  }
 
  /**
   * @method update
   * @desc methode om het scorebord opnieuw te vullen met de nieuwste status
   */
- Game.prototype.update = function() {
-    $("#gamesPlayed").text(game.plays);
-    $("#gamesWon").text(game.wins);
-    $("#gamesLost").text(game.losses);
+ Game.prototype.update = () => {
+    $("#gamesPlayed").text(this.plays);
+    $("#gamesWon").text(this.wins);
+    $("#gamesLost").text(this.losses);
+ }
+
+ Game.prototype.stop = function(resultaat) {
+    clearInterval(id);
+    this.running = false;
+    console.log(resultaat);
  }
 
  /**
   * @method save
   * @desc methode om een spel op te slaan op basis van de naam van de speler.
   */
- Game.prototype.save = function() {
-    this.name = $('#name').val();
+ Game.prototype.save = () => {
     if(this.name === "") {
-        this.name = prompt("Voer een naam in");
-        $('#name').val(this.name);
+        this.name = $('#name').val();
+        if(this.name === "") {
+            this.name = prompt("Voer een naam in");
+            $('#name').val(this.name);
+        }
     }
-    if(USE_SERVER === true) {
+    if(Server.useServer === true) {
         // Save game via Ajax
-        $.ajax(SERVER_URL,
+        $.ajax(Server.serverUrl,
         {
             type: POST,
-            username: USER,
-            password: PASSWORD,
+            username: Server.user,
+            password: Server.password,
             data: JSON.stringify(this)
         }
     );
@@ -329,21 +306,24 @@ function updatePoints(){
   * @method load
   * @desc methode om een voorheen opgeslagen spel opnieuw in te laden op basis van de naam van de speler.
   */
- Game.prototype.load = function() {
+ Game.prototype.load = () => {
     stop();
-    this.name = $('#name').val();
     if(this.name === "") {
-        this.name = prompt("Voer een naam in");
-        $('#name').val(this.name);
+        this.name = $('#name').val();
+        if(this.name === "") {
+            this.name = prompt("Voer een naam in");
+            $('#name').val(this.name);
+        }
     }
+
     var response;
-    if(USE_SERVER === true) {
+    if(Server.useServer === true) {
         // Laad game via Ajax
-        response = JSON.parse($.ajax(SERVER_URL + "/" + this.name,
+        response = JSON.parse($.ajax(Server.serverUrl + "/" + this.name,
         {
             type: GET,
-            username: USER,
-            password: PASSWORD
+            username: Server.user,
+            password: Server.password
         }
     ));
     } else {
@@ -353,6 +333,7 @@ function updatePoints(){
             response = JSON.parse(foundItem);
         }
     }
+    // De responsedata naar de game mappen om zo verder te kunnen waar we waren gebleven.
     if(response !== undefined) {
         this.name = response.name;
         this.wins = response.wins;
@@ -409,8 +390,8 @@ function eat(x,y) {
  * @desc Slang creëren, bestaande uit twee segmenten in het midden van het veld
  */
 function createStartSnake() {
-    snake = new Snake([createSegment(R + $("#mySnakeCanvas").width()/2, R + $("#mySnakeCanvas").width()/2), 
-                   createSegment(R + $("#mySnakeCanvas").width()/2, $("#mySnakeCanvas").width()/2 - R)]);
+    snake = new Snake([createSegment(R + PlayArea.width/2, R + PlayArea.width/2),
+                   createSegment(R + PlayArea.width/2, PlayArea.width/2 - R)]);
 }
 
 /**
@@ -476,7 +457,7 @@ function createFoods() {
     i = 0;
     //we gebruiken een while omdat we, om een arraymethode te gebruiken, eerst een nieuw array zouden moeten creëren (met NUMFOODS elementen)
     while (i < NUMFOODS) {
-        food = createFood(XMIN + getRandomInt(0, ($("#mySnakeCanvas").width()/ STEP-1)) * STEP, YMIN + getRandomInt(0, ($("#mySnakeCanvas").width()/ STEP-1)) * STEP); //MAX = WIDTH / STEP - 1
+        food = createFood(PlayAreaLimits.minX + getRandomInt(0, (PlayArea.width/ STEP-1)) * STEP, PlayAreaLimits.minY + getRandomInt(0, (PlayArea.width/ STEP-1)) * STEP); //MAX = WIDTH / STEP - 1
         if (!collidesWithOneOf(food, snake.segments) && !collidesWithOneOf(food, foods)) {
             foods.push(food);
             i += 1;

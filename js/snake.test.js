@@ -48,8 +48,8 @@ describe ("#canMove()", ()=> {
   context("Slang staat op grens", () => {
     it("Slang op linkergens; kan niet naar links (direction LEFT), wel andere richtingen", ()=> {
       init();
-      // Zet hoofd van slang op XMIN
-      head(snake).x = XMIN;
+      // Zet hoofd van slang op minX
+      head(snake).x = PlayAreaLimits.minX;
       expect(canMove(snake, RIGHT) === true);
       expect(canMove(snake, LEFT) === false);
       expect(canMove(snake, UP) === true);
@@ -57,8 +57,8 @@ describe ("#canMove()", ()=> {
     });
     it("Slang op rechterrens; kan niet naar rechts (direction RIGHT), wel andere richtingen", ()=> {
       init();
-      // Zet hoofd van slang op XMAX
-      head(snake).x = XMAX;
+      // Zet hoofd van slang op maxX
+      head(snake).x = PlayAreaLimits.maxX;
       expect(canMove(snake, RIGHT)===false);
       expect(canMove(snake, LEFT)===true);
       expect(canMove(snake, UP)===true);
@@ -66,8 +66,8 @@ describe ("#canMove()", ()=> {
     });
     it("Slang op bovengrens; kan niet naar boven (direction UP), wel andere richtingen", ()=> {
       init();
-      // Zet hoofd van slang op YMIN
-      head(snake).y = YMIN;
+      // Zet hoofd van slang op minY
+      head(snake).y = PlayAreaLimits.minY;
       expect(canMove(snake, RIGHT)===true);
       expect(canMove(snake, LEFT)===true);
       expect(canMove(snake, UP)===false);
@@ -75,8 +75,8 @@ describe ("#canMove()", ()=> {
     });
     it("Slang op benedengrens; kan niet naar beneden (direction DOWN), wel andere richtingen", ()=> {
       init();
-      // Zet hoofd van slang op YMAX
-      head(snake).y = YMAX;
+      // Zet hoofd van slang op maxY
+      head(snake).y = PlayAreaLimits.maxY;
       expect(canMove(snake, RIGHT)===true);
       expect(canMove(snake, LEFT)===true);
       expect(canMove(snake, UP)===true);
@@ -170,21 +170,21 @@ describe("#move()", ()=> {
   context("Slang staat op linkerrand", ()=> {
     it("Beweegt naar links, maar kan niet", ()=> {
       init();
-      head(snake).x = XMIN;
+      head(snake).x = PlayAreaLimits.minX;
       var currentX = head(snake).x;
       move(LEFT);
       expect(head(snake).x===currentX);
     });
     it("Beweegt naar rechts", ()=> {
       init();
-      head(snake).x = XMIN;
+      head(snake).x = PlayAreaLimits.minX;
       var currentX = head(snake).x;
       move(RIGHT);
       expect(head(snake).x===currentX + STEP);
     });
     it("Beweegt naar boven", ()=> {
       init();
-      head(snake).x = XMIN;
+      head(snake).x = PlayAreaLimits.minX;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(UP);
@@ -193,7 +193,7 @@ describe("#move()", ()=> {
     });
     it("Beweegt naar beneden", ()=> {
       init();
-      head(snake).x = XMIN;
+      head(snake).x = PlayAreaLimits.minX;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(DOWN);
@@ -205,21 +205,21 @@ describe("#move()", ()=> {
   context("Slang staat op rechterrand", ()=> {
     it("Beweegt naar rechts, maar kan niet", ()=> {
       init();
-      head(snake).x = XMAX;
+      head(snake).x = PlayAreaLimits.maxX;
       var currentX = head(snake).x;
       move(RIGHT);
       expect(head(snake).x===currentX);
     });
     it("Beweegt naar links", ()=> {
       init();
-      head(snake).x = XMAX;
+      head(snake).x = PlayAreaLimits.maxX;
       var currentX = head(snake).x;
       move(LEFT);
       expect(head(snake).x===currentX - STEP);
     });
     it("Beweegt naar boven", ()=> {
       init();
-      head(snake).x = XMAX;
+      head(snake).x = PlayAreaLimits.maxX;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(UP);
@@ -228,7 +228,7 @@ describe("#move()", ()=> {
     });
     it("Beweegt naar beneden", ()=> {
       init();
-      head(snake).x = XMAX;
+      head(snake).x = PlayAreaLimits.maxX;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(DOWN);
@@ -240,21 +240,21 @@ describe("#move()", ()=> {
   context("Slang staat op bovenrand", ()=> {
     it("Beweegt naar boven, maar kan niet", ()=> {
       init();
-      head(snake).y = YMIN;
+      head(snake).y = PlayAreaLimits.minY;
       var currentY = head(snake).y;
       move(UP);
       expect(head(snake).y===currentY);
     });
     it("Beweegt naar beneden", ()=> {
       init();
-      head(snake).y = YMIN;
+      head(snake).y = PlayAreaLimits.minY;
       var currentY = head(snake).y;
       move(DOWN);
       expect(head(snake).y===currentY + STEP);
     });
     it("Beweegt naar links", ()=> {
       init();
-      head(snake).y = YMIN;
+      head(snake).y = PlayAreaLimits.minY;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(LEFT);
@@ -263,7 +263,7 @@ describe("#move()", ()=> {
     });
     it("Beweegt naar rechts", ()=> {
       init();
-      head(snake).y = YMIN;
+      head(snake).y = PlayAreaLimits.minY;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(RIGHT);
@@ -275,21 +275,21 @@ describe("#move()", ()=> {
   context("Slang staat op onderrand", ()=> {
     it("Beweegt naar beneden, maar kan niet", ()=> {
       init();
-      head(snake).y = YMAX;
+      head(snake).y = PlayAreaLimits.maxY;
       var currentY = head(snake).y;
       move(DOWN);
       expect(head(snake).y===currentY);
     });
     it("Beweegt naar boven", ()=> {
       init();
-      head(snake).y = YMAX;
+      head(snake).y = PlayAreaLimits.maxY;
       var currentY = head(snake).y;
       move(UP);
       expect(head(snake).y===currentY - STEP);
     });
     it("Beweegt naar links", ()=> {
       init();
-      head(snake).y = YMAX;
+      head(snake).y = PlayAreaLimits.maxY;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(LEFT);
@@ -298,7 +298,7 @@ describe("#move()", ()=> {
     });
     it("Beweegt naar rechts", ()=> {
       init();
-      head(snake).y = YMAX;
+      head(snake).y = PlayAreaLimits.maxY;
       var currentX = head(snake).x;
       var currentY = head(snake).y;
       move(RIGHT);
@@ -319,12 +319,6 @@ describe("#collidesWithOneOf(snake, elements)", ()=> {
       while(foods.length > 0) {
         expect(collidesWithOneOf(foods.pop(), foods) === false);
       }
-    });
-    it("Slang raakt zichzelf, één loss meer dan hiervoor", ()=> { // hoort deze test hier thuis?
-      init();
-      var currentLosses = game.losses;
-      move(DOWN);
-      expect(game.losses).to.equal(currentLosses + 1);
     });
     it("Slang raakt zichzelf niet, game gaat door", ()=> {
       init();
@@ -374,10 +368,12 @@ describe("#eat()", ()=> {
         food.y = head(snake).y;
         move(RIGHT);
       });
-
-      expect(game.wins).to.equal(currentWins+1);
-      expect(game.losses).to.equal(currentLosses);
-      expect(game.plays).to.equal(currentPlays);
+      // Vanwege de "snelheid" van de slang moeten we even wachten voor resultaat
+      setTimeout(1000, () => {
+        expect(game.wins).to.equal(currentWins+1);
+        expect(game.losses).to.equal(currentLosses);
+        expect(game.plays).to.equal(currentPlays);
+      });
     });
   });
 });
@@ -410,6 +406,15 @@ describe("#Game.prototype.lose()", ()=> {
       expect(game.plays).to.equal(currentPlays);
       expect(game.wins).to.equal(currentWins);
    });
+  });
+  it("Slang raakt zichzelf, één loss meer dan hiervoor", ()=> {
+    init();
+    var currentLosses = game.losses;
+    move(DOWN);
+    // Vanwege de "snelheid" van de slang moeten we even wachten voor resultaat
+    setTimeout(1000, () => {
+      expect(game.losses).to.equal(currentLosses + 1);
+    });
   });
 });
 
