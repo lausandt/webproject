@@ -12,7 +12,7 @@ var state = {
  */
 function init() {
     state.snake = createSnake();
-    state.food = createFoods(5,[]);
+    state.food = createFoods(NUMFOODS,[]);
     draw();
 }
 
@@ -27,17 +27,17 @@ function stop() {
     clearInterval(id);
     $("#mySnakeCanvas").clearCanvas();
 }
-
+//controller functie
 function save() { 
     game.save(state); 
     stop();
     } 
-
+// ditto
 function load() { 
     game.load();
     draw();    
     }
-
+//view functie?
 function stats() {
     $("#statssheet").html("Played: " + game.stats()[0].played + ", Wins: " +  game.stats()[0].wins + ", Losses: " + (game.stats()[0].played - game.stats()[0].wins) );
 } 
@@ -60,19 +60,19 @@ function draw() {
         
         switch(event.key) {
             case "ArrowLeft": // left
-                clearInterval(id); // is getest en noodzakelijk
+                clearInterval(id); // clearInterval moet hier staan anders stopt de slang als een andere gedrukt wordt
                 id = setInterval(move, $("#myRange").val(), LEFT);
                 break;
             case "ArrowUp": // up
-                clearInterval(id); // is getest en noodzakelijk
+                clearInterval(id); 
                 id = setInterval(move, $("#myRange").val(), UP);
                 break;
             case "ArrowRight": // right
-                clearInterval(id); // is getest en noodzakelijk
+                clearInterval(id); 
                 id = setInterval(move, $("#myRange").val(), RIGHT);
                 break;
             case "ArrowDown": // down
-                clearInterval(id); // is getest en noodzakelijk
+                clearInterval(id); 
                 id = setInterval(move, $("#myRange").val(), DOWN);
                 break;
             default: return; // exit this handler for other keys
