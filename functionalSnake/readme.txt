@@ -6,23 +6,22 @@ We programmeren volgens een functionele stijl daarbij houden we wel rekening met
 
 Hoewel we via een library als immutable en ramda zouden kunnen gebruiken, zonder gebruik te maken van statisch typeren is JavaScript nooit puur functioneel 
 
-Puur functioneel zou beteken dat we moeten programmeren in een combinatie van typescript/rambda en dat is een stap te ver.
+Puur functioneel zou betekenen dat we moeten programmeren in een combinatie van typescript/rambda en dat is een stap te ver.
 
 Wat betekent dan programmeren in de functionele stijl voor ons?
 
 - Functies zijn zelfstandige entiteiten.  
 
-- Alles is eigenlijk een functie, in iedergeval een first class citizen. 
+- Alles is eigenlijk een functie, een first class citizen. 
 
 - Hoewel JS geen ADT's kent, gebruiken we object literals als ADT. Met het voorgaande in gedachte hebben onze object literals geen gedrag. Oftewel geen methodes.
 
-- Hoewel we geen immutables datastructuren gebruiken (maar de simpele array) behandelen we die wel als immutable, door bv slice en concat te gebruiken ipv shift en push 
+- Hoewel we geen immutables datastructuren gebruiken (maar de simpele array) behandelen we die wel als immutable, door bv slice en concat te gebruiken ipv shift en push (behalve in wat test code mbt de mock up func. )
 
 - We streven totaliteit na in het schrijven van de functies en strooien niet met errors. bv als we een functie schrijven zevenGedeeldDoor dan kan hij niet het functietype int -> int hebben
   Maar iets als int -> (belofte van een int) 
   
-- Er zijn geen decoratiefuncties als createSegment. Onze voorkeur gaat uit naar één functie waarbij een eventueel verschil als parameter wordt meegeven. 
-  BV createElement(r, x, y, color) 
+- Er zijn geen decoratiefuncties als createSegment. Onze voorkeur gaat uit naar één functie waarbij een eventueel verschil als parameter wordt meegeven. BV createElement(r, x, y, color) 
 
 - Waar mogelijk maken gebruik van chaining om nieuwe functie te schrijven
 
