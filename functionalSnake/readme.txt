@@ -16,7 +16,7 @@ Wat betekent dan programmeren in de functionele stijl voor ons?
 
 - Hoewel JS geen ADT's kent, gebruiken we object literals als ADT. Met het voorgaande in gedachte hebben onze object literals geen gedrag. Oftewel geen methodes.
 
-- Hoewel we geen immutables datastructuren gebruiken (maar de simpele array) behandelen we die wel als immutable, door bv slice en concat te gebruiken ipv shift en push (behalve in wat test code mbt de mock up func. )
+- Hoewel we geen immutables datastructuren gebruiken (maar de simpele array) behandelen we die wel als immutable, door bv slice en concat te gebruiken ipv shift en push.
 
 - We streven totaliteit na in het schrijven van de functies en strooien niet met errors. bv als we een functie schrijven zevenGedeeldDoor dan kan hij niet het functietype int -> int hebben
   Maar iets als int -> (belofte van een int) 
@@ -31,8 +31,7 @@ Wat betekent dan programmeren in de functionele stijl voor ons?
 
 Als een logische conclusie van het bovenstaande hebben wij jullie functie createFoods danig verbouwd. Enkele andere functies hebben wij laten vallen. 
 
-Daarmee is functionalSnake 15% gereduceerd in function count, waarvan wij zeggen dat dit ten goede komt aan de onderhoudbaarheid. 
-
+Daarmee is snake 15% gereduceerd in function count, waarvan wij zeggen dat dit ten goede komt aan de onderhoudbaarheid. 
 
 
 
