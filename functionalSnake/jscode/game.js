@@ -8,6 +8,9 @@ var game = (function () {
    const GAME_URL = "http://localhost/game/snake";
    const RESULT_URL = "http://verzinwat";
    const USE_SERVER = false;
+   
+   saveToLocalStorage("stats", { played: 0, wins: 0 }); // laat een basis statistiek op. 
+   
   
    /**
    * @desc Bevat de gegevens zoals de URL, username en password van de server
@@ -115,16 +118,16 @@ var game = (function () {
    function result(bool) {
       if (bool) {
          if (USE_SERVER) {
-            saveToServer(RESULT_URL, { played: 1 + GWL[0].played, wins: 1 + GWL[0].wins }); // mock representation
+            saveToServer(RESULT_URL, { played: 1 + stats().played, wins: 1 + stats().wins}); // mock representation
          } else {
-            saveToLocalStorage("stats", { played: 1 + GWL[0].played, wins: 1 + GWL[0].wins });
+            saveToLocalStorage("stats", { played: 1 + stats().played, wins: 1 + stats().wins});
          }
       }
       else {
          if (USE_SERVER) {
-            saveToServer(RESULT_URL, { played: 1 + GWL[0].played, wins: GWL[0].wins }); // mock representation
+            saveToServer(RESULT_URL, { played: 1 + stats().played, wins: stats().played }); // mock representation
          } else {
-            saveToLocalStorage("stats", { played: 1 + GWL[0].played, wins: GWL[0].wins });
+            saveToLocalStorage("stats", { played: 1 + stats().played, wins: stats().wins });
          }
       }
    }
@@ -135,6 +138,7 @@ var game = (function () {
     * @desc haalt de statistieken op
     */
    function stats() { return retrieveFromLocalStorage("stats"); }
+  
 
 
    // public api 
@@ -142,6 +146,7 @@ var game = (function () {
       save: save,
       load: load,
       result: result,
-      stats: stats
+      stats: stats,
+      retrieveFromLocalStorage: retrieveFromLocalStorage
    };
 }());
