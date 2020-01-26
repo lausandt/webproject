@@ -1,35 +1,36 @@
 "use strict";
-// game module
+/**
+ * @module game
+ * @desc module om opslag en retrieval te faciliteren
+ */
 var game = (function () {
 
    const GAME_URL = "http://localhost/game/snake";
    const RESULT_URL = "http://verzinwat";
    const USE_SERVER = false;
-   var SavedGames = [];//testing purposes {snake: [], food: []}
-   var GWL = [{ played: 0, wins: 0 }]; // list with a stats ADT (games, wins, & (derivable) losses)
-
+  
    /**
    * @desc Bevat de gegevens zoals de URL, username en password van de server
    */
    const Server = {
-      serverURL: "http://localhost/game/snake",
       user: "user",                                 // Username voor onze "server"
       password: "password"                          // Wachtwoord voor onze "server"
    };
+   
    /**
     * @function saveGameToServer
     * @desc Stuurt het spel op naar de server voor opslag
     *
     * @param {String} url een server URL
-    * @param { Object } state een object literal
+    * @param { state } state een object literal
     */
-   function saveToServer(url, adt) {
+   function saveToServer(url, state) {
       $.ajax(url,
          {
             type: "POST",
             username: Server.user,
             password: Server.password,
-            data: JSON.stringify(adt)
+            data: JSON.stringify(state)
          });
    }
 
@@ -37,10 +38,11 @@ var game = (function () {
    * @function saveGameToServer
    * @desc Stuurt het spel op naar localStorage voor opslag
    *
+   * @param {string} arg the key for storage and retrieval
    * @param { Object } state een object literal
    */
-   function saveToLocalStorage(adt) {
-      localStorage.setItem("game", JSON.stringify(adt));
+   function saveToLocalStorage(arg, state) {
+      localStorage.setItem(arg, JSON.stringify(state));
    }
 
    /**
@@ -50,7 +52,7 @@ var game = (function () {
     * @param { string } url de server URL
     * @param { string } user de gebruikersnaam
     * @param { string } password het wachtwoord van de gebruiker
-    * @return { Object } een object literal
+    * @return { state } state de opgeslagen staat van het spel
     */
    function retrieveFromServer(url, user, password) {
       return (JSON.parse($.ajax(url,
@@ -64,36 +66,47 @@ var game = (function () {
    /**
     * @function retrieveFromLocalStorage
     * @desc Haalt het spel uit localStorage
+    *
+    * @param {string} arg the key for storage and retrieval
+    * @return { state } state de opgeslagen staat van het spel 
     */
-   function retrieveFromLocalStorage() {
-      return JSON.parse(localStorage.getItem("game"));
+   function retrieveFromLocalStorage(arg) {
+      return JSON.parse(localStorage.getItem(arg));
    }
 
    /** 
+    * @public
     * @function save
     * @desc Slaat een spel op
     *
-    * @param {state} snake de slang
+    * @param {state} state de staat van het spel
     */
    function save(state) {
-      SavedGames.push({ snake: state.snake, food: state.food }) //for testing purposes so no concat
-      if (USE_SERVER) {
+       if (USE_SERVER) {
          saveToServer(GAME_URL, state); // mock representation
       } else {
-         saveToLocalStorage(state);
+         saveToLocalStorage("game", state);
       }
 
    }
    /**
+    * @public
     * @function load
-    * @desc Laadt een voorheen opgeslagen spel
+    * @desc Laadt een opgeslagen spel
     */
    function load() {
-      state.snake = SavedGames[SavedGames.length - 1].snake;
-      state.food = SavedGames[SavedGames.length - 1].food;
+     if (USE_SERVER) { // mock representation
+         state.snake = retrieveFromServer(GAME_URL, user, password).snake; 
+         state.food = retrieveFromServer(GAME_URL, user, password).food;
+      } 
+     else {
+        state.snake = retrieveFromLocalStorage("game").snake;
+        state.food = retrieveFromLocalStorage("game").food;
+     }  
    }
 
    /**
+    * @public
     * @function result
     * @desc Stuurt een update naar de server (of localStorage) met de status van het laatstgespeelde spel (gewonnen of verloren).
     * 
@@ -101,30 +114,27 @@ var game = (function () {
     */
    function result(bool) {
       if (bool) {
-         GWL.push({ played: 1 + GWL[0].played, wins: 1 + GWL[0].wins });
          if (USE_SERVER) {
             saveToServer(RESULT_URL, { played: 1 + GWL[0].played, wins: 1 + GWL[0].wins }); // mock representation
          } else {
-            saveToLocalStorage({ played: 1 + GWL[0].played, wins: 1 + GWL[0].wins });
+            saveToLocalStorage("stats", { played: 1 + GWL[0].played, wins: 1 + GWL[0].wins });
          }
-         console.log("GEWONNEN!!!");
       }
       else {
-         GWL.push({ played: 1 + GWL[0].played, wins: GWL[0].wins });
          if (USE_SERVER) {
             saveToServer(RESULT_URL, { played: 1 + GWL[0].played, wins: GWL[0].wins }); // mock representation
          } else {
-            saveToLocalStorage({ played: 1 + GWL[0].played, wins: GWL[0].wins });
+            saveToLocalStorage("stats", { played: 1 + GWL[0].played, wins: GWL[0].wins });
          }
-         console.log("VERLOREN!!!");
       }
-      GWL.shift();//keeping one ADT in my list
    }
+   
    /**
+    * @public
     * @function stats
-    * @desc Haalt de GWL op voor indirecte toegang tot GWL.
+    * @desc haalt de statistieken op
     */
-   function stats() { return GWL; }
+   function stats() { return retrieveFromLocalStorage("stats"); }
 
 
    // public api 
