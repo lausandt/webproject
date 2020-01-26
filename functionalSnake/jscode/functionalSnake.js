@@ -1,9 +1,10 @@
-// state based snake 
- 
+"use strict";
+
+// state based snake
 var id;
-var state = { 
-              snake:  [] , 
-              food: [] 
+var state = {
+              snake:  [],
+              food: []
 };
 
 /**
@@ -28,19 +29,19 @@ function stop() {
     $("#mySnakeCanvas").clearCanvas();
 }
 //controller functie
-function save() { 
-    game.save(state); 
+function save() {
+    game.save(state);
     stop();
-    } 
+    }
 // ditto
-function load() { 
+function load() {
     game.load();
-    draw();    
+    draw();
     }
 //view functie?
 function stats() {
     $("#statssheet").html("Played: " + game.stats()[0].played + ", Wins: " +  game.stats()[0].wins + ", Losses: " + (game.stats()[0].played - game.stats()[0].wins) );
-} 
+}
 /**
  * @function draw
  * @desc Teken de slang en het voedsel
@@ -53,26 +54,25 @@ function draw() {
 
 /**
  * @function arrowKeyMove
- * @desc an eventhandler that makes a move if one of the arrow keys is pressed
+ * @desc Verandert de richting van de slang aan de hand van toetsenbordinteracties (UP/DOWN/RIGHT/LEFT)
  * @param { event } event a keyboardEvent
  */
  function arrowKeyMove(event) {
-        
         switch(event.key) {
             case "ArrowLeft": // left
                 clearInterval(id); // clearInterval moet hier staan anders stopt de slang als een andere gedrukt wordt
                 id = setInterval(move, $("#myRange").val(), LEFT);
                 break;
             case "ArrowUp": // up
-                clearInterval(id); 
+                clearInterval(id);
                 id = setInterval(move, $("#myRange").val(), UP);
                 break;
             case "ArrowRight": // right
-                clearInterval(id); 
+                clearInterval(id);
                 id = setInterval(move, $("#myRange").val(), RIGHT);
                 break;
             case "ArrowDown": // down
-                clearInterval(id); 
+                clearInterval(id);
                 id = setInterval(move, $("#myRange").val(), DOWN);
                 break;
             default: return; // exit this handler for other keys
@@ -99,7 +99,7 @@ function move(direction) {
  *
  * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
  *
- * @return {boolean} true if the head of snake can move, false otherwise  
+ * @return {boolean} true if the head of snake can move, false otherwise
  */
 
 function canMove(direction) {
@@ -121,25 +121,24 @@ function canMove(direction) {
 /**
  * @function doMove
  * @desc methode van Snake, beweegt de slang over het veld en eet het food volgens het onderstaande algoritme:
- * 
- * - 1: creëer een nieuwe head -> moveTo 
+ *
+ * - 1: creëer een nieuwe head -> moveTo
  * - 2: Case 1: Het veld waar naar toe bewogen wordt is vrij -> slice
  *      Case 2: Het veld waar naar toe bewogen wordt is bevat food -> eat
- * - 3: kleur de huidige kop van de slang als de rest 
+ * - 3: kleur de huidige kop van de slang als de rest
  * - 4: voeg de nieuwe head toe -> concat
  *
- * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt 
+ * @param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT) waar naar toe bewogen wordt
  */
 function doMove(direction) {
     var newHead = moveTo(direction);
-    if (collidesWithOneOf(newHead, state.snake)) { 
+    if (collidesWithOneOf(newHead, state.snake)) {
         clearInterval(id);
         game.result(false);
         stats();
-        alert("You've lossed the game");
     }
-    else { 
-        if (!(collidesWithOneOf(newHead, state.food))) { 
+    else {
+        if (!(collidesWithOneOf(newHead, state.food))) {
             state.snake = state.snake.slice(1,state.snake.length);
         }
         else {
@@ -149,15 +148,13 @@ function doMove(direction) {
                 clearInterval(id);
                 game.result(true);
                 stats();
-                alert("You're a winner darling!");
             }
         }
     }
     head().color=SNAKE;
-    state.snake = state.snake.concat(newHead); 
+    state.snake = state.snake.concat(newHead);
     draw();
-  
-}  
+}
 
 /**
  * @function eat
@@ -167,7 +164,7 @@ function doMove(direction) {
  */
 function eat(x,y) {
     state.food = state.food.filter(food => !(food.x === x && food.y === y));
-}    
+}
 
 /**
  * @function head
@@ -180,32 +177,28 @@ function eat(x,y) {
 
  /**
   *@function moveTo
-  *@desc creates a new element at the desired position
+  *@desc Maakt een nieuw element op de volgende locatie in de aangegeven richting
   *
   *@param {string} direction de richting (een van de constanten UP, DOWN, LEFT of RIGHT)
-  * 
+  *
   *@return {Element} nieuw element
   */
-function moveTo(direction) { 
+function moveTo(direction) {
   switch(direction) {
       case UP:
         return { radius: R, x: head().x, y: head().y - STEP, color: HEAD };
-        break;
       case DOWN:
         return { radius: R, x: head().x, y: head().y + STEP, color: HEAD };
-        break;
       case LEFT:
         return { radius: R, x: head().x - STEP, y: head().y, color: HEAD };
-        break;
       case RIGHT:
         return { radius: R, x: head().x + STEP, y: head().y, color: HEAD };
-        break;       
-    };  
-} 
+    };
+}
 
 /**
  * @function updatePoints
- * @desc updates the points won in the game
+ * @desc Stuurt een update naar de score (punten) van de game
  */
 function updatePoints(points){
     $("#score").html("Score: " + points);
@@ -216,33 +209,33 @@ function updatePoints(points){
  * @desc controleert of één van de elementen dezelfde (x,y)-coordinaten heeft als element waarop de functie wordt aangeroepen.
  *
  * @param {Element} el een element
- * @param {Element[]} elements een Array van elementen objecten
+ * @param {Element[]} elements een array van Element-objecten
  *
- * @return {boolean} false if there are no collisions, true otherwise 
+ * @return {boolean} false als geen collisions, anders true
  *
  */
 function collidesWithOneOf(el, elements) { return elements.map(element => el.x === element.x && el.y === element.y).some(bool => bool===true); }
 
 /**
- * @function createElement 
- * @desc creates an element
- * 
- * @param {number} r radius of the element
- * @param {number} xcor x-coordinate of the element
- * @param {number} ycor y-coordinate of the element 
- * @param {color } col the color of the element 
+ * @function createElement
+ * @desc Maakt een element aan
  *
- * @return {Element}  
+ * @param {number} r radius van het element
+ * @param {number} xcor x-coördinaat van het element
+ * @param {number} ycor y-coördinaat van het element
+ * @param {color } col de kleur van het element
+ *
+ * @return {Element}
  */
 function createElement(r, xcor, ycor, col) {
     return { radius: r, x: xcor, y: ycor, color: col }
 }
 
 /**
- * @function createSnake 
- * @desc creates a snake which ois defined as an array of adjacent elements of a particular color
+ * @function createSnake
+ * @desc Maakt een slang aan op de startpositie
  *
- * @return {Element[]} the snake
+ * @return {Element[]} de slang
  */
 function createSnake(){
     return [createElement(R, PlayArea.width/2 + R, PlayArea.height/2 + R, SNAKE), createElement(R, PlayArea.width/2 + R, PlayArea.height/2 - R, HEAD)];
@@ -250,7 +243,7 @@ function createSnake(){
 
 /**
  * @function getRandomInt helper functie
- * @desc creëren van random geheel getal in de interval [min, max] 
+ * @desc creëren van random geheel getal in de interval [min, max]
  *
  * @param {number} min een geheel getal als onderste grenswaarde
  * @param {number} max een geheel getal als bovenste grenswaarde (max > min)
@@ -263,24 +256,24 @@ function getRandomInt(min, max) {
 
 /**
  * @function createFoods
- * @desc creëert random voedsel elementen 
+ * @desc creëert random voedsel elementen
  *
- *@param {number} num het aantal voedsel elementen 
+ *@param {number} num het aantal voedsel elementen
  *@param {array } foods een accumulator initieel leeg
- * 
- * @return {Element[]} foods een array van voedsel elementen 
+ *
+ * @return {Element[]} foods een array van voedsel elementen
  */
-function createFoods(num, foods) { 
+function createFoods(num, foods) {
     //base case
     if (num === 0 ) { return foods; }
-    // recursive step 
+    // recursive step
     else {
         var food =  createElement(R, R + getRandomInt(0, (PlayArea.width / STEP-1)) * STEP, R + getRandomInt(0, (PlayArea.width / STEP-1)) * STEP, "Olive");
         if (!collidesWithOneOf(food, state.snake) && !collidesWithOneOf(food, foods)) {
             foods = foods.concat(food);
             return createFoods(num-1, foods);
         }
-        else { 
+        else {
             return createFoods(num, foods);
         }
     }
@@ -288,7 +281,7 @@ function createFoods(num, foods) {
 
 /**
  * @function drawElement
- * @desc Een voedsel of snake element tekenen 
+ * @desc Een voedsel of snake element tekenen
  *
  * @param {Element} element een element object (food/snake)
  * @param {canvas} dom object canvas (is het tekenveld)
