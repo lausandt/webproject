@@ -37,7 +37,6 @@ var id;
 function init() {
     model.state.snake = createSnake();
     model.state.food = createFoods(NUMFOODS,[]);
-    game.initStats(model.stats);
     draw();
 }
 
@@ -354,4 +353,5 @@ $(document).ready(() => {
     $("#loadSnake").click(snake.load)
     $("#saveSnake").click(snake.save);
     $(document).keydown(snake.arrowKeyMove);
+    
 });
