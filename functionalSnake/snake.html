@@ -15,7 +15,7 @@
                     <li id="player">Player:</li>
                     <li id="score">score:0</li> 
                     <li id="statssheet">Played: 0, Wins: 0, Losses: 0</li> 
-                    <li id="login">Login</li>
+                    <li id="winlose"></li>
               </nav>       
             </div>
             <div class="menu"><h1>menu</h1>
@@ -42,6 +42,7 @@
                 <div class="slidecontainer">
                     <p>set snake's speed</p>
                     <input type="range" min="100" max="900" value="500" class="slider" id="myRange">
+                    <p><= go fast or go slow =></p>
                 </div>
                 <div class="spel">
                     <canvas id="mySnakeCanvas" width="360" height="360"></canvas>    
@@ -49,9 +50,9 @@
             </div>
             <script src="http://code.jquery.com/jquery.min.js"></script>
             <script src="js/jcanvas.min.js"></script>
-            <script src="js/properties.js"></script>
             <script src="js/game.js"></script> 
-            <script src="js/functionalSnake.js"></script>
+            <script src="js/snake.js"></script>
+            <script src="js/model.js"></script>            
         </div>
 	</body>
 </html>
