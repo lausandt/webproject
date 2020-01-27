@@ -4,21 +4,18 @@
  * @desc module om opslag en retrieval te faciliteren
  */
 var game = (function () {
+    
+  const GAME_URL = "http://localhost/game/snake";
+  const RESULT_URL = "http://verzinwat";
+  const USE_SERVER = false;
 
-   const GAME_URL = "http://localhost/game/snake";
-   const RESULT_URL = "http://verzinwat";
-   const USE_SERVER = false;
    
-   saveToLocalStorage("stats", { played: 0, wins: 0 }); // laat een basis statistiek op. 
-   
-  
-   /**
-   * @desc Bevat de gegevens zoals de URL, username en password van de server
-   */
-   const Server = {
-      user: "user",                                 // Username voor onze "server"
-      password: "password"                          // Wachtwoord voor onze "server"
-   };
+  const Server = {
+    user: "user",                                 // Username voor onze "server"
+    password: "password"                          // Wachtwoord voor onze "server"
+  };
+
+
    
    /**
     * @function saveGameToServer
@@ -99,12 +96,12 @@ var game = (function () {
     */
    function load() {
      if (USE_SERVER) { // mock representation
-         state.snake = retrieveFromServer(GAME_URL, user, password).snake; 
-         state.food = retrieveFromServer(GAME_URL, user, password).food;
+         model.state.snake = retrieveFromServer(GAME_URL, user, password).snake; 
+         model.state.food = retrieveFromServer(GAME_URL, user, password).food;
       } 
      else {
-        state.snake = retrieveFromLocalStorage("game").snake;
-        state.food = retrieveFromLocalStorage("game").food;
+        model.state.snake = retrieveFromLocalStorage("game").snake;
+        model.state.food = retrieveFromLocalStorage("game").food;
      }  
    }
 
@@ -138,7 +135,19 @@ var game = (function () {
     * @desc haalt de statistieken op
     */
    function stats() { return retrieveFromLocalStorage("stats"); }
-  
+   
+   /**
+    * @function initStats
+    * @desc stores the initial stats
+    */
+   function initStats(stats){
+       if (USE_SERVER) {
+            saveToServer(RESULT_URL, stats); // mock representation
+         } 
+       else {
+            saveToLocalStorage("stats", stats);
+         }
+   }
 
 
    // public api 
@@ -147,6 +156,6 @@ var game = (function () {
       load: load,
       result: result,
       stats: stats,
-      retrieveFromLocalStorage: retrieveFromLocalStorage
+      initStats: initStats
    };
 }());
