@@ -8,13 +8,15 @@ var game = (function () {
   const GAME_URL = "http://localhost/game/snake";
   const RESULT_URL = "http://verzinwat";
   const USE_SERVER = false;
+  
+  saveToLocalStorage("stats", {played:0, wins:0});// initialises the stats
 
    
   const Server = {
     user: "user",                                 // Username voor onze "server"
     password: "password"                          // Wachtwoord voor onze "server"
   };
-
+ 
 
    
    /**
@@ -136,18 +138,6 @@ var game = (function () {
     */
    function stats() { return retrieveFromLocalStorage("stats"); }
    
-   /**
-    * @function initStats
-    * @desc stores the initial stats
-    */
-   function initStats(stats){
-       if (USE_SERVER) {
-            saveToServer(RESULT_URL, stats); // mock representation
-         } 
-       else {
-            saveToLocalStorage("stats", stats);
-         }
-   }
 
 
    // public api 
@@ -155,7 +145,6 @@ var game = (function () {
       save: save,
       load: load,
       result: result,
-      stats: stats,
-      initStats: initStats
+      stats: stats
    };
 }());
