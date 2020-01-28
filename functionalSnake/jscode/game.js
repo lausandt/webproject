@@ -4,21 +4,17 @@
  * @desc module om opslag en retrieval te faciliteren
  */
 var game = (function () {
-    
-  const GAME_URL = "http://localhost/game/snake";
-  const RESULT_URL = "http://verzinwat";
-  const USE_SERVER = false;
-  
-  saveToLocalStorage("stats", {played:0, wins:0});// initialises the stats
+   const GAME_URL = "http://localhost/game/snake";
+   const RESULT_URL = "http://verzinwat";
+   const USE_SERVER = false;
 
-   
-  const Server = {
-    user: "user",                                 // Username voor onze "server"
-    password: "password"                          // Wachtwoord voor onze "server"
-  };
- 
+   saveToLocalStorage("stats", {played:0, wins:0});// initialises the stats
 
-   
+   const Server = {
+      user: "user",                                 // Username voor onze "server"
+      password: "password"                          // Wachtwoord voor onze "server"
+   };
+
    /**
     * @function saveGameToServer
     * @desc Stuurt het spel op naar de server voor opslag
@@ -84,7 +80,7 @@ var game = (function () {
     * @param {state} state de staat van het spel
     */
    function save(state) {
-       if (USE_SERVER) {
+         if (USE_SERVER) {
          saveToServer(GAME_URL, state); // mock representation
       } else {
          saveToLocalStorage("game", state);
@@ -97,14 +93,14 @@ var game = (function () {
     * @desc Laadt een opgeslagen spel
     */
    function load() {
-     if (USE_SERVER) { // mock representation
+      if (USE_SERVER) { // mock representation
          model.state.snake = retrieveFromServer(GAME_URL, user, password).snake; 
          model.state.food = retrieveFromServer(GAME_URL, user, password).food;
       } 
-     else {
-        model.state.snake = retrieveFromLocalStorage("game").snake;
-        model.state.food = retrieveFromLocalStorage("game").food;
-     }  
+      else {
+         model.state.snake = retrieveFromLocalStorage("game").snake;
+         model.state.food = retrieveFromLocalStorage("game").food;
+      }  
    }
 
    /**
@@ -130,14 +126,14 @@ var game = (function () {
          }
       }
    }
-   
+
    /**
     * @public
     * @function stats
     * @desc haalt de statistieken op
     */
    function stats() { return retrieveFromLocalStorage("stats"); }
-   
+
 
 
    // public api 
