@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  
+  <!-- Include Mocha CSS styles -->
+  <link href="mocha.css" rel="stylesheet">
+  <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+  <script src="js/chai.js"></script>
+  <script src="js/mocha.js"></script>
+  <script src="js/jcanvas.min.js"></script>
+</head>
+
+<body>
+  <canvas id="mySnakeCanvas" width="360" height="360" style="display: none;"></canvas>
+  <div id="mocha"></div>
+  
+  <script>
+    // Set chai.expect as a global variable
+    var expect = chai.expect;
+    
+    // Setup Mocha to use the BDD interface
+    mocha.setup('bdd');
+  </script>
+  
+  <script src="js/game.js"></script> 
+  <script src="js/snake.js"></script>
+  <script src="js/model.js"></script>  
+  <script src="js/snake.test.js"></script>
+  
+  <script>
+    // Run the tests with Mocha
+    mocha.run();
+  </script>
+    
+</body>
+</html>

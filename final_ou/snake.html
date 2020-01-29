@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<title>Mijn spelletjessite/snake</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="stijl.css">
+	</head>
+	<body>
+      <div class="container">
+            <div class="header"><h1 class="pagetitle">SALON DES JEUX</h1></div>
+            <div class="score">
+              <nav>
+                <ul class= "nav"> 
+                    <li id="currentgame">you are playing: SNAKE</li>
+                    <li id="player">Player:</li>
+                    <li id="score">score:0</li> 
+                    <li id="statssheet">Played: 0, Wins: 0, Losses: 0</li> 
+                    <li id="winlose"></li>
+              </nav>       
+            </div>
+            <div class="menu"><h1>menu</h1>
+                <nav>
+                    <ul class="navul">
+                        <li><a href="index.html">Welkom</a></li>
+                        <li><a href= "../">Inloggen</a></li>
+                        <li><a href= "snake.html">Snake</a></li>
+                        <li><a href= "../">Boter-kaas-eieren</a></li>
+                        <li><a href= "../">Sudoku</a></li>
+                        <li><a href= "../">Mastermind</a></li>
+                        <li><a href= "../">Galgje</a></li>
+                        <li><a href= "../">Crypogram</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="content">
+                <div class="spel-controls">
+                    <button id="startSnake">start</button>
+                    <button id="stopSnake">stop</button>
+                    <button id="loadSnake">load game</button>
+                    <button id="saveSnake">save game</button>
+                </div>
+                <div class="slidecontainer">
+                    <p>set snake's speed</p>
+                    <input type="range" min="100" max="900" value="500" class="slider" id="myRange">
+                    <p><= go fast or go slow =></p>
+                </div>
+                <div class="spel">
+                    <canvas id="mySnakeCanvas" width="360" height="360"></canvas>
+                </div>
+            </div>
+            <script src="http://code.jquery.com/jquery.min.js"></script>
+            <script src="js/jcanvas.min.js"></script>
+            <script src="js/confetti.min.js"></script>
+            <script src="js/game.js"></script> 
+            <script src="js/snake.js"></script>
+            <script src="js/model.js"></script>            
+        </div>
+	</body>
+</html>
